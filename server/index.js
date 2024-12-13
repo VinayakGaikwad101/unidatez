@@ -21,10 +21,6 @@ app.use("/api/pre-register", preLaunchRouter); // http://localhost:3000/api/pre-
 
 connectToMongoDB();
 
-app.get("/", (req, res) => {
-  res.render("Backend service running successfully");
-});
-
 app.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`);
 });
