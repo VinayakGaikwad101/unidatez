@@ -9,10 +9,11 @@ export default function EmailFormSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setIsSubmitting(true);
     try {
       const response = await fetch(
-        `${import.meta.VITE_SERVER_URL}/api/pre-register/save/email`,
+        `${import.meta.env.VITE_SERVER_URL}/api/pre-register/save/email`,
         {
           method: "POST",
           headers: {
