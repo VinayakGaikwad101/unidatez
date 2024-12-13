@@ -2,12 +2,12 @@ import { Heart, Users, BookOpen } from "lucide-react";
 
 export default function AboutUsSection() {
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 md:px-8 lg:px-16 bg-[url('/aboutBg.jpg')] bg-no-repeat bg-center bg-cover">
-      <div className="w-full max-w-4xl rounded-lg p-8 md:p-12">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center ">
+    <section className="min-h-screen flex items-center justify-center px-2 md:px-8 lg:px-16 bg-[url('/aboutBg.jpg')] bg-no-repeat bg-center bg-cover">
+      <div className="w-full max-w-4xl rounded-lg p-0 md:p-12">
+        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-left pl-0 md:pl-8">
           Welcome to UniDatez!
         </h2>
-        <div className="space-y-6 ">
+        <div className="space-y-6 text-left pl-0 md:pl-8">
           <p className="text-xl md:text-2xl font-semibold">
             Looking for a fun and easy way to connect with someone special or
             make a new friend who shares your interests, passions, and academic
@@ -22,7 +22,7 @@ export default function AboutUsSection() {
           </p>
 
           <div className="my-8">
-            <h3 className="text-2xl md:text-3xl font-bold mb-4 ">
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
               What makes us different?
             </h3>
             <ul className="space-y-4">
@@ -55,11 +55,9 @@ export default function AboutUsSection() {
             running!
           </p>
 
-          <div className="text-center mt-8">
-            <p className="text-2xl font-bold ">Thank you!</p>
-            <p className="text-xl italic ">
-              Let's make connections that count!
-            </p>
+          <div className="text-left mt-8">
+            <p className="text-2xl font-bold">Thank you!</p>
+            <p className="text-xl italic">Let's make connections that count!</p>
           </div>
         </div>
       </div>
