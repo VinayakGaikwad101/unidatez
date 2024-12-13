@@ -3,6 +3,7 @@ import connectToMongoDB from "./db/mongodb.js";
 import dotenv from "dotenv";
 import preLaunchRouter from "./routes/PreLaunchRoute.js";
 import cors from "cors";
+import path from "path";
 
 dotenv.config();
 
