@@ -12,7 +12,7 @@ export default function EmailFormSection() {
     setIsSubmitting(true);
     try {
       const response = await fetch(
-        "http://localhost:3000/api/pre-register/save/email",
+        `${import.meta.VITE_SERVER_URL}/api/pre-register/save/email`,
         {
           method: "POST",
           headers: {
