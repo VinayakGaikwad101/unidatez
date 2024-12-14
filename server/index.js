@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(
   cors({
-    origin: "www.unidatez.com",
+    origin: "https://www.unidatez.com",
     methods: "GET, POST, PUT, PATCH, DELETE",
     credentials: true,
   })
