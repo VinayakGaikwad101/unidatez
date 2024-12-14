@@ -1,8 +1,8 @@
-import { Heart, Users, BookOpen } from "lucide-react";
+import { Heart, Users, BookOpen, Instagram, Mail } from "lucide-react";
 
 export default function AboutUsSection() {
   return (
-    <section className="min-h-screen flex items-center justify-center px-2 md:px-8 lg:px-16 bg-[url('/aboutBg.jpg')] bg-no-repeat bg-center bg-cover">
+    <section className="min-h-screen flex items-center justify-center px-2 md:px-8 lg:px-16 bg-[url('/aboutBg.jpg')] bg-no-repeat bg-center bg-contain">
       <div className="w-full max-w-4xl rounded-lg p-0 md:p-12">
         <h2 className="text-4xl md:text-5xl font-bold mb-6 text-left pl-0 md:pl-8">
           Welcome to UniDatez!
@@ -58,6 +58,28 @@ export default function AboutUsSection() {
           <div className="text-left mt-8">
             <p className="text-2xl font-bold">Thank you!</p>
             <p className="text-xl italic">Let's make connections that count!</p>
+          </div>
+
+          <div className="mt-8">
+            <h3 className="text-2xl font-bold mb-4">Connect with us:</h3>
+            <div className="flex items-center space-x-6">
+              <a
+                href="https://www.instagram.com/unidatez"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-lg hover:text-gray-300 transition-colors"
+              >
+                <Instagram className="mr-2" size={24} />
+                @unidatez
+              </a>
+              <a
+                href="mailto:unidatez@gmail.com"
+                className="flex items-center text-lg hover:text-gray-300 transition-colors"
+              >
+                <Mail className="mr-2" size={24} />
+                unidatez@gmail.com
+              </a>
+            </div>
           </div>
         </div>
       </div>

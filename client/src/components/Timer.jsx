@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function TimerSection({ targetDate }) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   function calculateTimeLeft() {
-    const difference = +targetDate - +new Date();
+    const difference = +new Date(targetDate) - +new Date();
     let timeLeft = {};
 
     if (difference > 0) {
@@ -28,14 +28,21 @@ export default function TimerSection({ targetDate }) {
   });
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center bg-[url('/homeBg.jpg')] bg-no-repeat bg-center bg-contain">
+    <section className="min-h-screen flex flex-col items-center justify-center bg-[url('/homeBg.jpg')] bg-no-repeat bg-center bg-contain relative">
+      <div className="absolute left-4 md:left-1/4 transform -translate-x-1/2">
+        {/* <img
+          src="/logo.jpg"
+          alt="UniDatez Logo"
+          className="w-auto h-auto md:w-48 md:h-48 object-cover"
+        /> */}
+      </div>
       <div className="flex gap-4">
         {Object.keys(timeLeft).map((interval) => (
           <div key={interval} className="flex flex-col items-center">
-            <span className="text-6xl font-bold mt-5">
+            <span className="text-4xl md:text-6xl font-bold mt-5">
               {timeLeft[interval]}
             </span>
-            <span className="text-xl">{interval}</span>
+            <span className="text-lg md:text-xl">{interval}</span>
           </div>
         ))}
       </div>
