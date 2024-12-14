@@ -29,13 +29,14 @@ export default function TimerSection({ targetDate }) {
 
   return (
     <section className="min-h-screen flex flex-col items-center justify-center bg-[url('/homeBg.jpg')] bg-no-repeat bg-center bg-contain relative">
-      <div className="absolute left-4 md:left-1/4 transform -translate-x-1/2">
-        {/* <img
+      {/* <div className="absolute left-4 md:left-1/4 transform -translate-x-1/2">
+        <img
           src="/logo.jpg"
           alt="UniDatez Logo"
-          className="w-auto h-auto md:w-48 md:h-48 object-cover"
-        /> */}
-      </div>
+          className="object-cover"
+          style={{ width: "5em", height: "5em" }} 
+        />
+      </div> */}
       <div className="flex gap-4">
         {Object.keys(timeLeft).map((interval) => (
           <div key={interval} className="flex flex-col items-center">
