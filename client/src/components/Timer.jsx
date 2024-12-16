@@ -55,17 +55,20 @@ export default function TimerSection() {
         backgroundPosition: bgPosition,
       }}
     >
-      <div className="flex gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-        {Object.entries(timeLeft).map(([interval, value]) => (
-          <div key={interval} className="flex flex-col items-center">
-            <span className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-white drop-shadow-lg min-w-[2ch] text-center">
-              {value}
-            </span>
-            <span className="text-xs sm:text-sm md:text-lg lg:text-xl text-white capitalize drop-shadow-lg">
-              {interval}
-            </span>
-          </div>
-        ))}
+      <div className="flex flex-col items-center w-full">
+        {/* Timer container with responsive positioning */}
+        <div className="flex gap-4 sm:gap-6 md:gap-8 lg:gap-10 -mt-24 sm:-mt-12 md:-mt-12 lg:-mt-8">
+          {Object.entries(timeLeft).map(([interval, value]) => (
+            <div key={interval} className="flex flex-col items-center">
+              <span className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-white drop-shadow-lg min-w-[2ch] text-center">
+                {value}
+              </span>
+              <span className="text-xs sm:text-sm md:text-lg lg:text-xl text-white capitalize drop-shadow-lg">
+                {interval}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
