@@ -1,0 +1,34 @@
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import TimerSection from "./components/Timer";
+import EmailFormSection from "./components/Contact";
+import { Toaster } from "react-hot-toast";
+import AboutUsSection from "./components/About";
+import Login from "./pages/auth/login/Login"; // Import the Login component
+
+const App = () => {
+  const [targetDate, setTargetDate] = useState(new Date("2024-12-31T23:59:59"));
+
+  return (
+    <Router>
+      <Toaster />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <main className="min-h-screen bg-[#ff5470] text-white">
+                <TimerSection targetDate={targetDate} />
+                <EmailFormSection />
+                <AboutUsSection />
+              </main>
+            </>
+          }
+        />
+        <Route path="/auth/login" element={<Login />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
