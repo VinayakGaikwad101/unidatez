@@ -10,7 +10,10 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(
   cors({
-    origin: "https://www.unidatez.com",
+    origin:
+      process.env.ENVIRONMENT === "production"
+        ? " http://localhost:5173"
+        : "https://www.unidatez.com",
     methods: "GET, POST, PUT, PATCH, DELETE",
     credentials: true,
   })
