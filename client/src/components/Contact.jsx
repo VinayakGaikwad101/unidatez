@@ -38,7 +38,10 @@ export default function EmailFormSection() {
   };
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-[url('/contactBg.jpg')] bg-no-repeat bg-center bg-contain text-white">
+    <section
+      id="email-form"
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-[url('/contactBg.jpg')] bg-no-repeat bg-center bg-contain text-white"
+    >
       <div className="max-w-4xl mx-auto text-center space-y-8">
         <h2 className="text-4xl md:text-5xl font-bold leading-tight">
           Be the first to know when our website goes live and fully functional!
