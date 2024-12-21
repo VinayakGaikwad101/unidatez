@@ -1,14 +1,13 @@
-````markdown
-# API Documentation
+### **API Documentation**
 
-## Email Pre-Registration
+## **Email Pre-Registration**
 
-### Endpoint: `POST http://localhost:3000/api/pre-register/save/email`
+### **Endpoint:** `POST http://localhost:3000/api/pre-register/save/email`
 
 **Description:**
 This endpoint allows users to pre-register their email addresses for notifications about the upcoming launch. The email address will be stored in the database if it is not already registered.
 
-### Request
+### **Request:**
 
 - **URL:** `http://localhost:3000/api/pre-register/save/email`
 - **Method:** `POST`
@@ -20,18 +19,35 @@ This endpoint allows users to pre-register their email addresses for notificatio
     "email": "user@example.com"
   }
   ```
-````
+
+### **Example Responses**
+
+#### **Success Response:**
+```json
+{
+  "message": "Pre-registration successful",
+  "success": true
+}
+```
+
+#### **Error Response:**
+```json
+{
+  "message": "Email already registered",
+  "success": false
+}
+```
 
 ---
 
-## User Registration
+## **User Registration**
 
-### Endpoint: `POST http://localhost:3000/api/auth/register`
+### **Endpoint:** `POST http://localhost:3000/api/auth/register`
 
 **Description:**
 This endpoint allows users to register an account by providing their email, password, and name. If the email address is already registered, the user will be prompted to log in instead.
 
-### Request
+### **Request:**
 
 - **URL:** `http://localhost:3000/api/auth/register`
 - **Method:** `POST`
@@ -46,10 +62,9 @@ This endpoint allows users to register an account by providing their email, pass
   }
   ```
 
-### Example Responses
+### **Example Responses**
 
 #### **Success Response for Registration:**
-
 ```json
 {
   "message": "Registration successful",
@@ -58,7 +73,6 @@ This endpoint allows users to register an account by providing their email, pass
 ```
 
 #### **Error Response for Registration (Email Exists):**
-
 ```json
 {
   "message": "Email already exists, please login",
@@ -68,14 +82,14 @@ This endpoint allows users to register an account by providing their email, pass
 
 ---
 
-## Verify Email
+## **Verify Email**
 
-### Endpoint: `POST http://localhost:3000/api/auth/verify-email`
+### **Endpoint:** `POST http://localhost:3000/api/auth/verify-email`
 
 **Description:**
 This endpoint allows users to verify their email address using a verification code sent to their email upon registration. The verification code must be valid and not expired.
 
-### Request
+### **Request:**
 
 - **URL:** `http://localhost:3000/api/auth/verify-email`
 - **Method:** `POST`
@@ -88,10 +102,9 @@ This endpoint allows users to verify their email address using a verification co
   }
   ```
 
-### Example Responses
+### **Example Responses**
 
 #### **Success Response for Email Verification:**
-
 ```json
 {
   "message": "Email verification successful",
@@ -100,7 +113,6 @@ This endpoint allows users to verify their email address using a verification co
 ```
 
 #### **Error Response for Invalid Verification Code:**
-
 ```json
 {
   "message": "Invalid or expired verification code",
