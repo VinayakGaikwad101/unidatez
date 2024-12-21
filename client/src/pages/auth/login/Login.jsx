@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Heart } from "lucide-react";
 import { Toaster, toast } from "react-hot-toast";
 
 const Login = () => {
@@ -53,7 +52,7 @@ const Login = () => {
       {/* Login form */}
       <div className="z-10 w-full max-w-md p-8 bg-white bg-opacity-80 backdrop-blur-sm rounded-lg shadow-xl m-4">
         <div className="text-center mb-8">
-          <Heart className="mx-auto text-pink-500 h-12 w-12 mb-2" />
+          <img src="/logo.jpg" alt="Logo" className="mx-auto h-12 w-12 mb-2" />
           <h2 className="text-3xl font-bold text-pink-700">
             Login to UniDatez
           </h2>
