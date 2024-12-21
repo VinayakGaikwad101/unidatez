@@ -88,7 +88,7 @@ const Signup = () => {
 
       {/* Signup form */}
       <div className="z-10 w-full max-w-md p-8 bg-white bg-opacity-80 backdrop-blur-sm rounded-lg shadow-xl m-4">
-        <h2 className="text-2xl font-semibold text-pink-600 mb-6">Signup</h2>
+        <h2 className="text-3xl font-semibold text-pink-600 mb-6 text-center ">Signup</h2>
         {step === 1 ? (
           <form onSubmit={handleEmailSubmit} className="space-y-6">
             <div>

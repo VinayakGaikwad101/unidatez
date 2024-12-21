@@ -65,7 +65,9 @@ const Login = () => {
 
       {/* Login form */}
       <div className="z-10 w-full max-w-md p-8 bg-white bg-opacity-80 backdrop-blur-sm rounded-lg shadow-xl m-4">
-        <h2 className="text-2xl font-semibold text-pink-600 mb-6">Login</h2>
+        <h2 className="text-3xl font-semibold text-pink-600 mb-6 text-center">
+          Login
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
