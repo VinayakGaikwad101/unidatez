@@ -5,6 +5,7 @@ import EmailFormSection from "./components/Contact";
 import { Toaster } from "react-hot-toast";
 import AboutUsSection from "./components/About";
 import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
 
 const App = () => {
   const [targetDate, setTargetDate] = useState(new Date("2024-12-31T23:59:59"));
@@ -26,6 +27,7 @@ const App = () => {
           }
         />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
   );
