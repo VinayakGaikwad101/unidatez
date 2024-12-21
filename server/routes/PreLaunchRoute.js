@@ -4,6 +4,6 @@ import { preLaunchEmailRegister } from "../controllers/PreLaunchEmailRegister.js
 
 const router = express.Router();
 
-router.post("/save/email", preLaunchEmailRegister);
+router.post("/save/email", preLaunchEmailRegister); // http://localhost:3000/api/pre-register/save/email
 
 export default router;

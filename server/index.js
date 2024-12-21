@@ -1,10 +1,11 @@
 import express from "express";
-import connectToMongoDB from "./db/mongodb.js";
 import dotenv from "dotenv";
-import preLaunchRouter from "./routes/PreLaunchRoute.js";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
+
+import connectToMongoDB from "./db/mongodb.js";
+
+import preLaunchRouter from "./routes/PreLaunchRoute.js";
+import authRouter from "./routes/AuthRoute.js";
 
 dotenv.config();
 
@@ -23,15 +24,9 @@ app.use(
 );
 app.use(express.json());
 
-app.use("/api/pre-register", preLaunchRouter); // http://localhost:3000/api/pre-register/save/email
+app.use("/api/pre-register", preLaunchRouter); 
 
-// // Serve static files from the dist folder
-// app.use(express.static("dist"));
-
-// // Catch-all route to serve index.html
-// app.get("*", (req, res) => {
-//   res.sendFile("dist/index.html");
-// });
+app.use("/api/auth", authRouter); 
 
 connectToMongoDB();
 

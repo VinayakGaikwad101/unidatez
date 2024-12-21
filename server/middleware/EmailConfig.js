@@ -1,0 +1,13 @@
+import nodemailer from "nodemailer";
+
+export const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "vinaayakgaikwad@gmail.com",
+    pass: "hzdx jnbm nkpp iquw",
+  },
+});
+
+
