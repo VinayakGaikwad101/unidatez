@@ -4,7 +4,7 @@ import TimerSection from "./components/Timer";
 import EmailFormSection from "./components/Contact";
 import { Toaster } from "react-hot-toast";
 import AboutUsSection from "./components/About";
-import Login from "./pages/auth/login/Login"; // Import the Login component
+import Login from "./pages/auth/Login";
 
 const App = () => {
   const [targetDate, setTargetDate] = useState(new Date("2024-12-31T23:59:59"));
@@ -25,7 +25,7 @@ const App = () => {
             </>
           }
         />
-        <Route path="/auth/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
