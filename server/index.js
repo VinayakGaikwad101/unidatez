@@ -25,13 +25,13 @@ app.use(express.json());
 
 app.use("/api/pre-register", preLaunchRouter); // http://localhost:3000/api/pre-register/save/email
 
-// Serve static files from the dist folder
-app.use(express.static("dist"));
+// // Serve static files from the dist folder
+// app.use(express.static("dist"));
 
-// Catch-all route to serve index.html
-app.get("*", (req, res) => {
-  res.sendFile("dist/index.html");
-});
+// // Catch-all route to serve index.html
+// app.get("*", (req, res) => {
+//   res.sendFile("dist/index.html");
+// });
 
 connectToMongoDB();
 
