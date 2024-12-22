@@ -41,8 +41,7 @@ This endpoint allows users to register an account by providing their email, pass
   ```json
   {
     "email": "user@example.com",
-    "password": "yourpassword",
-    "name": "Your Name"
+    "password": "yourpassword"
   }
   ```
 
