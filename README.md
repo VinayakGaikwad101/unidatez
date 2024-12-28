@@ -1,5 +1,3 @@
-Got it. Let’s finish up that comprehensive documentation for you. Here’s the whole package for the APIs you shared:
-
 ### **API Documentation**
 
 ## **Email Pre-Registration**
