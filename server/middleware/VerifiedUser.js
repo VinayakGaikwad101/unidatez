@@ -20,7 +20,10 @@ export const verifiedUser = async (req, res, next) => {
     if (!userExist.isVerified) {
       return res
         .status(403)
-        .json({ message: "User not verified", success: false });
+        .json({
+          message: "Email not verified, please verify your email",
+          success: false,
+        });
     }
 
     next();

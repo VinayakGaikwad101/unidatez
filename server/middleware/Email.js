@@ -7,7 +7,8 @@ import { transporter } from "./EmailConfig.js";
 export const sendVerificationCode = async (email, verificationCode) => {
   try {
     const response = await transporter.sendMail({
-      from: '"UniDatez 💗" <vinaayakgaikwad@gmail.com>',
+      // from: '"UniDatez 💗" <vinaayakgaikwad@gmail.com>',
+      from: '"UniDatez 💗" <unidatez@gmail.com>',
       to: email,
       subject: "Verify your Email",
       text: "Verify your Email",
@@ -26,7 +27,8 @@ export const sendVerificationCode = async (email, verificationCode) => {
 export const sendWelcomeEmail = async (email, name) => {
   try {
     const response = await transporter.sendMail({
-      from: '"UniDatez 💗" <vinaayakgaikwad@gmail.com>',
+      // from: '"UniDatez 💗" <vinaayakgaikwad@gmail.com>',
+      from: '"UniDatez 💗" <unidatez@gmail.com>',
       to: email,
       subject: "Welcome Email",
       text: "Welcome to UniDatez",

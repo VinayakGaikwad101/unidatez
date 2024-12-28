@@ -1,11 +1,15 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import connectToMongoDB from "./db/mongodb.js";
 
-import preLaunchRouter from "./routes/PreLaunchRoute.js";
-import authRouter from "./routes/AuthRoute.js";
+import preLaunchRouter from "./routes/PreLaunchRouter.js";
+import authRouter from "./routes/AuthRouter.js";
+import userRouter from "./routes/UserRouter.js";
+import matchRouter from "./routes/MatchRouter.js";
+import messageRouter from "./routes/MessageRouter.js";
 
 dotenv.config();
 
@@ -22,11 +26,16 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
+app.use(cookieParser());
 
-app.use("/api/pre-register", preLaunchRouter); 
+app.use("/api/pre-register", preLaunchRouter);
 
-app.use("/api/auth", authRouter); 
+app.use("/api/auth", authRouter);
+app.use("/api/users", userRouter);
+app.use("/api/matches", matchRouter);
+app.use("/api/messages", messageRouter);
 
 connectToMongoDB();
 
