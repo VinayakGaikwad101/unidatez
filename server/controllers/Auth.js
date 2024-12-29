@@ -34,12 +34,15 @@ export const register = async (req, res) => {
       });
     }
 
-    const emailDomain = email.split("@")[1];
-    if (emailDomain !== "vitstudent.ac.in") {
-      return res.status(400).json({
-        message: "Please use your university email and try again",
-        success: false,
-      });
+    // disable this during production
+    if (!(process.env.ENVIRONMENT === "production")) {
+      const emailDomain = email.split("@")[1];
+      if (emailDomain !== "vitstudent.ac.in") {
+        return res.status(400).json({
+          message: "Please use your university email and try again",
+          success: false,
+        });
+      }
     }
 
     const userExist = await User.findOne({ email });
@@ -87,9 +90,8 @@ export const register = async (req, res) => {
     sendVerificationCode(user.email, user.verificationCode);
 
     return res.status(200).json({
-      message: "Registration successful! Please login",
+      message: "Registration successful! Please verify your email",
       success: true,
-      user,
     });
   } catch (error) {
     console.error(error);
@@ -123,7 +125,7 @@ export const verifyEmail = async (req, res) => {
     await sendWelcomeEmail(userExist.email, userExist.name);
 
     return res.status(200).json({
-      message: "Email verification successful",
+      message: "Email verification successful, please Login",
       success: true,
     });
   } catch (error) {

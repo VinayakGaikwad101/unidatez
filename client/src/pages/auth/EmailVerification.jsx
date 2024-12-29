@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "../../store/useAuthStore";
 
@@ -73,6 +73,15 @@ const EmailVerification = () => {
             {loading ? "Verifying..." : "Verify OTP"}
           </button>
         </form>
+        <p className="mt-4 text-center text-sm text-pink-600">
+          New to UniDatez?{" "}
+          <Link
+            to="/signup"
+            className="font-medium text-pink-700 hover:text-pink-800"
+          >
+            Sign Up
+          </Link>
+        </p>
       </div>
       <Toaster position="top-center" />
     </div>

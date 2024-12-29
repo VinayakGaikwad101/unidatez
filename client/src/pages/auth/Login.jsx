@@ -1,40 +1,23 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Toaster, toast } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "../../store/useAuthStore";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const { login, loading } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    login({ email, password }, navigate);
+  };
 
-    try {
-      const response = await fetch("https://dummyurl.com/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
-      console.log("Login successful:", data);
-      toast.success("Login successful!");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -94,23 +77,42 @@ const Login = () => {
             >
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 block w-full px-3 py-2 bg-white border border-pink-300 rounded-md text-sm shadow-sm placeholder-pink-400
-                         focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500"
-              placeholder="••••••••"
-            />
+            <div className="relative mt-1">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="block w-full px-3 py-2 bg-white border border-pink-300 rounded-md text-sm shadow-sm placeholder-pink-400
+                           focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon
+                    className="h-5 w-5 text-gray-500"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <EyeIcon
+                    className="h-5 w-5 text-gray-500"
+                    aria-hidden="true"
+                  />
+                )}
+              </button>
+            </div>
           </div>
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={loading}
             className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? "Signing In..." : "Sign In"}
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-pink-600">
@@ -119,7 +121,16 @@ const Login = () => {
             to="/signup"
             className="font-medium text-pink-700 hover:text-pink-800"
           >
-            Sign up to use UniDatez
+            Sign Up
+          </Link>
+        </p>
+        <p className="mt-4 text-center text-sm text-pink-600">
+          Account not verified?{" "}
+          <Link
+            to="/otp-verification"
+            className="font-medium text-pink-700 hover:text-pink-800"
+          >
+            Verify
           </Link>
         </p>
       </div>

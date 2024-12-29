@@ -5,7 +5,16 @@ dotenv.config();
 
 export const protectRoute = async (req, res, next) => {
   try {
-    const token = req.cookies.jwt;
+    let token;
+
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    } else if (req.cookies.jwt) {
+      token = req.cookies.jwt;
+    }
 
     if (!token) {
       return res.status(401).json({
@@ -24,12 +33,17 @@ export const protectRoute = async (req, res, next) => {
 
     const currentUser = await User.findById(decoded.id);
 
-    // protected routes can access current user by await User.findById(req.user.id)
-    req.user = currentUser;
+    if (!currentUser) {
+      return res.status(401).json({
+        message: "The user belonging to this token no longer exists",
+        success: false,
+      });
+    }
 
+    req.user = currentUser;
     next();
   } catch (error) {
-    console.error("Error in protectRoute middleware");
+    console.error("Error in protectRoute middleware:", error);
     if (error instanceof jwt.JsonWebTokenError) {
       return res
         .status(401)
