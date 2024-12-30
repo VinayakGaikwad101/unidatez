@@ -1,7 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { Flame, User, LogOut, Menu } from "lucide-react";
+import {
+  User,
+  LogOut,
+  Menu,
+  X,
+  MessageCircle,
+  Users,
+  Heart,
+} from "lucide-react";
 
 const Header = () => {
   const { authUser, logout } = useAuthStore();
@@ -9,6 +17,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -27,55 +36,53 @@ const Header = () => {
     navigate("/login");
   };
 
+  const navItems = [
+    { name: "Profile", path: "/profile", icon: User },
+    { name: "Chats", path: "/chats", icon: MessageCircle },
+    { name: "Users", path: "/users", icon: Users },
+    { name: "Find a Match", path: "/find-match", icon: Heart },
+  ];
+
   return (
-    <header className="bg-gradient-to-r from-pink-500 via-pink-600 to-pink-700 shadow-lg">
+    <header className="bg-[#ff5470] shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <Flame className="w-8 h-8 text-white" />
+              <img
+                src="/logo.jpg"
+                alt="UniDatez"
+                className="w-10 h-10 rounded-full"
+              />
               <span className="text-2xl font-bold text-white hidden sm:inline">
                 UniDatez
               </span>
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
+          <nav className="hidden md:flex items-center space-x-4">
             {authUser ? (
-              <div className="relative" ref={dropdownRef}>
+              <>
+                {navItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    className={`flex items-center space-x-1 text-white hover:text-pink-200 transition duration-150 ease-in-out ${
+                      location.pathname === item.path ? "font-bold" : ""
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span>{item.name}</span>
+                  </Link>
+                ))}
                 <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center space-x-2 focus:outline-none"
+                  onClick={handleLogout}
+                  className="flex items-center space-x-1 text-white hover:text-pink-200 transition duration-150 ease-in-out"
                 >
-                  <img
-                    src={authUser.image || "/avatar.png"}
-                    className="h-10 w-10 object-cover rounded-full border-2 border-white"
-                    alt="User"
-                  />
-                  <span className="text-white font-medium">
-                    {authUser.name}
-                  </span>
+                  <LogOut className="w-5 h-5" />
+                  <span>Logout</span>
                 </button>
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                    <Link
-                      to="/profile"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      <User className="mr-2" size={16} />
-                      Profile
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      <LogOut className="mr-2" size={16} />
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
+              </>
             ) : (
               <>
                 <Link
@@ -86,20 +93,24 @@ const Header = () => {
                 </Link>
                 <Link
                   to="/signup"
-                  className="bg-white text-pink-600 px-4 py-2 rounded-full font-medium hover:bg-pink-100 transition duration-150 ease-in-out"
+                  className="bg-white text-[#ff5470] px-4 py-2 rounded-full font-medium hover:bg-pink-100 transition duration-150 ease-in-out"
                 >
                   Sign Up
                 </Link>
               </>
             )}
-          </div>
+          </nav>
 
           <div className="md:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-white focus:outline-none"
             >
-              <Menu className="h-6 w-6" />
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
@@ -107,42 +118,51 @@ const Header = () => {
 
       {/* MOBILE MENU */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-pink-600">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="md:hidden bg-[#ff5470] border-t border-pink-400">
+          <div className="px-2 pt-2 pb-3 space-y-1">
             {authUser ? (
               <>
-                <Link
-                  to="/profile"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-700"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Profile
-                </Link>
+                {navItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-600 ${
+                      location.pathname === item.path ? "bg-pink-600" : ""
+                    }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span>{item.name}</span>
+                  </Link>
+                ))}
                 <button
                   onClick={() => {
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-700"
+                  className="flex items-center space-x-2 w-full text-left px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-600"
                 >
-                  Logout
+                  <LogOut className="w-5 h-5" />
+                  <span>Logout</span>
                 </button>
               </>
             ) : (
               <>
                 <Link
                   to="/login"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-700"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-600"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Login
+                  <User className="w-5 h-5" />
+                  <span>Login</span>
                 </Link>
                 <Link
                   to="/signup"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-700"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-white hover:bg-pink-600"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Sign Up
+                  <User className="w-5 h-5" />
+                  <span>Sign Up</span>
                 </Link>
               </>
             )}

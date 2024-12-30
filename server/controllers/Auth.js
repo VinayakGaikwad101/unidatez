@@ -27,9 +27,9 @@ export const register = async (req, res) => {
       });
     }
 
-    if (age < 18) {
+    if (age < 17) {
       return res.status(400).json({
-        message: "You must be atleast 18 years old",
+        message: "You must be atleast 17 years old",
         success: false,
       });
     }
@@ -145,9 +145,17 @@ export const login = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Invalid credentials",
+        success: false,
+      });
+    }
+
     const isPasswordValid = bcryptjs.compareSync(password, user.password);
 
-    if (!user || !isPasswordValid) {
+    if (!isPasswordValid) {
       return res.status(404).json({
         message: "Invalid credentials",
         success: false,

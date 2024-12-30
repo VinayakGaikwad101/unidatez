@@ -147,7 +147,7 @@ const Signup = () => {
               value={age}
               onChange={(e) => setAge(e.target.value)}
               required
-              min={18}
+              min={17}
               className="mt-1 block w-full px-3 py-2 bg-white border border-pink-300 rounded-md text-sm shadow-sm placeholder-pink-400
                          focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500"
               placeholder="Your Age"

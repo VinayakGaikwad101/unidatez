@@ -1,7 +1,8 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import toast from "react-hot-toast";
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   authUser: null,
   checkingAuth: true,
   loading: false,
@@ -83,6 +84,7 @@ export const useAuthStore = create((set) => ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify(loginData),
+          credentials: "include", // Important: include credentials
         }
       );
 
@@ -100,8 +102,6 @@ export const useAuthStore = create((set) => ({
     } catch (error) {
       toast.error(error.message || "Login failed. Please try again.");
       set({ loading: false });
-    } finally {
-      set({ loading: false });
     }
   },
 
@@ -118,19 +118,22 @@ export const useAuthStore = create((set) => ({
         }
       );
 
-      // const data = await response.json();
-
-      if (response.status === 200) {
+      if (response.ok) {
         toast.success("Logout successful");
         set({ authUser: null });
+        return true; // Indicate successful logout
+      } else {
+        throw new Error("Logout failed");
       }
     } catch (error) {
-      toast.error(error.message || "Something went wrong");
+      toast.error(error.message || "Something went wrong during logout");
+      return false; // Indicate failed logout
     }
   },
 
   checkAuth: async () => {
     try {
+      set({ checkingAuth: true });
       const response = await fetch(
         `${import.meta.env.VITE_SERVER_URL}/api/auth/me`,
         {
@@ -151,7 +154,7 @@ export const useAuthStore = create((set) => ({
       }
     } catch (error) {
       set({ authUser: null });
-      console.log(error);
+      console.error("Error checking auth:", error);
     } finally {
       set({ checkingAuth: false });
     }

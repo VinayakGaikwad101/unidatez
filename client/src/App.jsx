@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -15,12 +15,21 @@ import EmailVerification from "./pages/auth/EmailVerification";
 import UserProfile from "./pages/loggedUser/UserProfile";
 import { useAuthStore } from "./store/useAuthStore";
 import Header from "./components/Navbar";
+import Chats from "./pages/loggedUser/Chats";
+import Users from "./pages/loggedUser/Users";
+import Match from "./pages/loggedUser/Match";
 
 const ProtectedRoute = ({ children }) => {
-  const { authUser } = useAuthStore();
+  const { authUser, checkingAuth } = useAuthStore();
+
+  if (checkingAuth) {
+    return <div>Loading...</div>; // Or a proper loading component
+  }
+
   return authUser ? (
     <>
-      <Header /> {children}
+      <Header />
+      {children}
     </>
   ) : (
     <Navigate to="/login" />
@@ -28,15 +37,15 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const App = () => {
-  const [targetDate, setTargetDate] = useState(new Date("2024-12-31T23:59:59"));
-
   const { checkAuth, authUser, checkingAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  if (checkingAuth) return null;
+  if (checkingAuth) {
+    return <div>Loading...</div>; // Or a proper loading component
+  }
 
   return (
     <Router>
@@ -45,13 +54,11 @@ const App = () => {
         <Route
           path="/"
           element={
-            <>
-              <main className="min-h-screen bg-[#ff5470] text-white">
-                <TimerSection targetDate={targetDate} />
-                <EmailFormSection />
-                <AboutUsSection />
-              </main>
-            </>
+            <main className="min-h-screen bg-[#ff5470] text-white">
+              <TimerSection targetDate={new Date("2024-12-31T23:59:59")} />
+              <EmailFormSection />
+              <AboutUsSection />
+            </main>
           }
         />
         <Route
@@ -68,12 +75,35 @@ const App = () => {
             !authUser ? <EmailVerification /> : <Navigate to="/profile" />
           }
         />
-        {/* Protected Routes */}{" "}
         <Route
           path="/profile"
           element={
             <ProtectedRoute>
               <UserProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chats"
+          element={
+            <ProtectedRoute>
+              <Chats />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute>
+              <Users />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/find-match"
+          element={
+            <ProtectedRoute>
+              <Match />
             </ProtectedRoute>
           }
         />
