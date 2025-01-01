@@ -31,6 +31,46 @@ const userSchema = new mongoose.Schema(
       required: true,
       enum: ["Male", "Female", "Both"],
     },
+    collegeStream: {
+      type: String,
+      enum: [
+        "Biotechnology",
+        "Mechanical",
+        "Electrical and computer science",
+        "Electronic and communication",
+        "Computer science",
+        "Civil",
+        "Chemical",
+        "Health sciences and technology",
+        "Electrical and electronics",
+        "Electrical and instrumentation",
+        "Information technology",
+      ],
+    },
+    unidatezFor: {
+      type: String,
+      enum: [
+        "Friendship",
+        "Networking",
+        "Study Partner",
+        "Just Here to Explore",
+      ],
+    },
+    topSpotifyArtist: {
+      type: String,
+    },
+    favouriteMovieSeries: {
+      type: String,
+    },
+    topSongsOnSpotify: {
+      type: String,
+    },
+    pronouns: { type: String },
+    collegeYear: {
+      type: String,
+      enum: ["1st", "2nd", "3rd", "4th"],
+    },
+    homeState: { type: String },
     bio: {
       type: String,
       default: "",
