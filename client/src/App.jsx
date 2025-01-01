@@ -19,6 +19,7 @@ import Chats from "./pages/loggedUser/Chats";
 import Users from "./pages/loggedUser/Users";
 import Match from "./pages/loggedUser/Match";
 import Loader from "./components/Loader";
+import UpdateProfile from "./pages/loggedUser/UpdateProfile";
 
 const ProtectedRoute = ({ children }) => {
   const { authUser, checkingAuth } = useAuthStore();
@@ -109,6 +110,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Match />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/update-profile"
+          element={
+            <ProtectedRoute>
+              <UpdateProfile />
             </ProtectedRoute>
           }
         />
