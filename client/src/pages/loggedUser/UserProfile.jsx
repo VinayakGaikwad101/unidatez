@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
-import { UserIcon } from "@heroicons/react/24/solid";
+import { UserIcon, HeartIcon, SparklesIcon } from "@heroicons/react/24/solid";
+import { motion } from "framer-motion";
 
 const UserProfile = () => {
   const { authUser } = useAuthStore();
@@ -21,25 +22,35 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400">
       {/* Background image */}
       <img
-        src="/mobile_profile_bg.jpg"
+        src="/mobile_login_bg.jpg"
         alt="Romantic background"
         className="absolute inset-0 w-full h-full object-cover sm:hidden"
       />
       <img
-        src="/native_profile_bg.jpg"
+        src="/native_login_bg.jpg"
         alt="Romantic background"
         className="absolute inset-0 w-full h-full object-cover hidden sm:block"
       />
 
-      <div className="z-10 w-full max-w-md bg-white bg-opacity-90 backdrop-blur-sm shadow-xl rounded-lg m-4 p-8 transform transition-all duration-300 hover:scale-105">
+      {/* Content overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm"></div>
+
+      {/* Profile content */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="z-10 w-full max-w-3xl px-4 py-8 sm:px-6 lg:px-8"
+      >
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-[#ff5470] mb-6">
-            Your Profile
-          </h2>
-          <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-[#ff5470] shadow-lg flex items-center justify-center bg-gray-200">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-white shadow-lg flex items-center justify-center bg-pink-100"
+          >
             {image ? (
               <img
                 src={image}
@@ -47,33 +58,52 @@ const UserProfile = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <UserIcon className="w-20 h-20 text-gray-400" />
+              <UserIcon className="w-24 h-24 text-pink-400" />
             )}
-          </div>
-          <h3 className="text-2xl font-semibold text-[#ff5470]">{name}</h3>
-          <p className="text-gray-600">
+          </motion.div>
+          <h2 className="text-4xl font-bold text-white mb-2 text-shadow">
+            {name}
+          </h2>
+          <p className="text-xl text-pink-200">
             {age} • {gender}
           </p>
         </div>
 
-        <div className="space-y-4 mb-8">
-          <div>
-            <p className="text-sm font-medium text-gray-500">Preference</p>
-            <p className="text-[#ff5470]">{genderPreference}</p>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">About Me</p>
-            <p className="text-gray-700 italic">&quot;{bio}&quot;</p>
-          </div>
+        <div className="space-y-8 mb-12">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="bg-white bg-opacity-20 backdrop-blur-md rounded-lg p-6 shadow-lg"
+          >
+            <div className="flex items-center mb-4">
+              <HeartIcon className="w-6 h-6 text-pink-300 mr-2" />
+              <h3 className="text-xl font-semibold text-white">Preference</h3>
+            </div>
+            <p className="text-pink-100 text-lg">{genderPreference}</p>
+          </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="bg-white bg-opacity-20 backdrop-blur-md rounded-lg p-6 shadow-lg"
+          >
+            <div className="flex items-center mb-4">
+              <SparklesIcon className="w-6 h-6 text-pink-300 mr-2" />
+              <h3 className="text-xl font-semibold text-white">About Me</h3>
+            </div>
+            <p className="text-pink-100 text-lg italic">
+              &quot;{bio ? bio : "Nothing to show"}&quot;
+            </p>
+          </motion.div>
         </div>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={handleUpdateProfile}
-          className="w-full bg-[#ff5470] hover:bg-[#ff3d5c] text-white font-bold py-3 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#ff5470] focus:ring-opacity-50"
+          className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold py-4 px-6 rounded-full transition duration-300 ease-in-out transform hover:from-pink-600 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 shadow-lg"
         >
           Update Profile
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </div>
   );
 };
