@@ -18,12 +18,17 @@ import Header from "./components/Navbar";
 import Chats from "./pages/loggedUser/Chats";
 import Users from "./pages/loggedUser/Users";
 import Match from "./pages/loggedUser/Match";
+import Loader from "./components/Loader";
 
 const ProtectedRoute = ({ children }) => {
   const { authUser, checkingAuth } = useAuthStore();
 
   if (checkingAuth) {
-    return <div>Loading...</div>; // Or a proper loading component
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   }
 
   return authUser ? (
@@ -44,7 +49,7 @@ const App = () => {
   }, [checkAuth]);
 
   if (checkingAuth) {
-    return <div>Loading...</div>; // Or a proper loading component
+    return <Loader />; // Or a proper loading component
   }
 
   return (
