@@ -3,35 +3,35 @@
 import { useEffect, useState } from "react";
 import { Heart, Loader, X } from "lucide-react";
 import { Link } from "react-router-dom";
-// import { useMatchStore } from "../store/useMatchStore"
+// import { useMatchStore } from "../store/useMatchStore";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
-  //   const { getMyMatches, matches, isLoadingMyMatches } = useMatchStore()
+  // const { getMyMatches, matches, isLoadingMyMatches } = useMatchStore();
 
-  //   useEffect(() => {
-  //     getMyMatches()
-  //   }, [getMyMatches])
+  // useEffect(() => {
+  //   getMyMatches();
+  // }, [getMyMatches]);
 
   return (
     <>
       <div
         className={`
-        fixed top-20 bottom-4 left-4 z-10 w-64 bg-white shadow-md overflow-hidden transition-all duration-300
-        ease-in-out rounded-lg
-        ${isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}
-        lg:translate-x-0 lg:static lg:w-1/4 lg:h-[calc(100vh-2rem)] lg:my-4
+          fixed top-20 bottom-4 left-0 z-10 bg-white shadow-md overflow-hidden transition-all duration-300
+          ease-in-out ${isOpen ? "w-64 lg:w-1/2" : "w-0"}
         `}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-4 pb-[27px] border-b border-pink-200 flex justify-between items-center">
-            <h2 className="text-xl font-bold text-[#ff5470]">Matches</h2>
+            <h2 className="text-xl font-bold text-[#ff5470] lg:text-2xl">
+              Matches
+            </h2>
             <button
-              className="lg:hidden p-1 text-gray-500 hover:text-gray-700 focus:outline-none"
+              className="p-1 text-gray-500 hover:text-gray-700 focus:outline-none"
               onClick={toggleSidebar}
             >
               <X size={24} />
@@ -53,9 +53,7 @@ const Sidebar = () => {
                       alt="User avatar"
                       className="size-12 object-cover rounded-full mr-3 border-2 border-pink-300"
                     />
-                    <h3 className="font-semibold text-gray-800">
-                      {match.name}
-                    </h3>
+                    <h3 className="font-semibold text-gray-800">{match.name}</h3>
                   </div>
                 </Link>
               ))
@@ -65,7 +63,9 @@ const Sidebar = () => {
       </div>
 
       <button
-        className="lg:hidden fixed top-16 left-4 p-2 bg-white text-[#ff5470] rounded-full z-20 shadow-md hover:bg-[#ff5470] hover:text-white transition-colors duration-300"
+        className={`fixed top-16 left-4 p-2 bg-white text-[#ff5470] rounded-full z-20 shadow-md hover:bg-[#ff5470] hover:text-white transition-colors duration-300 ${
+          isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
         onClick={toggleSidebar}
       >
         <Heart size={24} />
