@@ -85,12 +85,12 @@ const UpdateProfile = () => {
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="name">Name:</label>
+            <label htmlFor="name">Fullname:</label>
             <input
               type="text"
               name="name"
               value={name}
-              onChange={handleImageChange}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Your Name"
               className={inputClasses}
               id="name"
