@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Heart, X, Frown, Loader2, Minimize2 } from "lucide-react";
 import { useMatchStore } from "../../store/useMatchStore";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Heart, X, ChevronRight, Frown } from "lucide-react";
-import Sidebar from "../../components/Sidebar";
 
 const Match = () => {
   const {
@@ -11,19 +11,20 @@ const Match = () => {
     userProfiles,
     swipeLeft,
     swipeRight,
+    swipeFeedback,
     // subscribeToNewMatches,
     // unsubscribeFromNewMatches,
   } = useMatchStore();
+
   const { authUser } = useAuthStore();
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     getUserProfiles();
   }, [getUserProfiles]);
 
   // useEffect(() => {
-  //   if (authUser) {
-  //     subscribeToNewMatches();
-  //   }
+  //   authUser && subscribeToNewMatches();
 
   //   return () => {
   //     unsubscribeFromNewMatches();
@@ -38,19 +39,162 @@ const Match = () => {
     swipeRight(user);
   };
 
+  const UserTable = () => (
+    <div className="w-full max-w-4xl overflow-x-auto">
+      <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead className="bg-[#ff5470] text-white">
+          <tr>
+            <th className="px-4 py-2">Image</th>
+            <th className="px-4 py-2">Name</th>
+            <th className="px-4 py-2">Age</th>
+            <th className="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {userProfiles.map((user) => (
+            <tr
+              key={user._id}
+              className="hover:bg-pink-50 transition-colors cursor-pointer"
+              onClick={() => setSelectedUser(user)}
+            >
+              <td className="px-4 py-2">
+                <img
+                  src={user.image || "/avatar.png"}
+                  alt={user.name}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              </td>
+              <td className="px-4 py-2">{user.name}</td>
+              <td className="px-4 py-2">{user.age}</td>
+              <td className="px-4 py-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSwipeLeft(user);
+                  }}
+                  className="p-2 bg-white rounded-full hover:bg-red-100 transition-colors mr-2"
+                >
+                  <X size={20} className="text-red-500" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSwipeRight(user);
+                  }}
+                  className="p-2 bg-white rounded-full hover:bg-green-100 transition-colors"
+                >
+                  <Heart size={20} className="text-[#ff5470]" />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const ExpandedProfile = ({ user, onClose }) => (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+    >
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full overflow-hidden">
+        <div className="relative">
+          <img
+            src={user.image || "/avatar.png"}
+            alt={user.name}
+            className="w-full h-64 object-cover"
+          />
+          <button
+            onClick={onClose}
+            className="absolute top-2 right-2 p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <Minimize2 size={24} className="text-gray-600" />
+          </button>
+        </div>
+        <div className="p-4">
+          <h2 className="text-2xl font-bold mb-2">
+            {user.name}, {user.age}
+          </h2>
+          <p className="text-gray-600 mb-4">{user.bio}</p>
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => {
+                handleSwipeLeft(user);
+                onClose();
+              }}
+              className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+            >
+              Dislike
+            </button>
+            <button
+              onClick={() => {
+                handleSwipeRight(user);
+                onClose();
+              }}
+              className="px-4 py-2 bg-[#ff5470] text-white rounded-full hover:bg-pink-600 transition-colors"
+            >
+              Like
+            </button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  const SwipeFeedback = () => (
+    <AnimatePresence>
+      {swipeFeedback && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl ${
+            swipeFeedback === "liked" ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {swipeFeedback === "liked" ? <Heart /> : <X />}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
+  const NoMoreProfiles = () => (
+    <div className="flex flex-col items-center justify-center h-full text-center p-8">
+      <Frown className="text-[#ff5470] mb-6" size={80} />
+      <h2 className="text-3xl font-bold text-gray-800 mb-4">
+        Woah there, speedy fingers!
+      </h2>
+      <p className="text-xl text-gray-600 mb-6">
+        Bro are you OK? Maybe it's time to touch some grass.
+      </p>
+    </div>
+  );
+
+  const LoadingUI = () => (
+    <div className="flex items-center justify-center h-full">
+      <Loader2 className="animate-spin text-[#ff5470]" size={48} />
+    </div>
+  );
+
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-pink-100 to-purple-100 overflow-hidden">
-      <Sidebar />
+    <div className="flex min-h-screen bg-gradient-to-br from-[#ff5470] to-pink-100 overflow-hidden">
       <div className="flex-grow flex flex-col overflow-hidden">
         <main className="flex-grow flex flex-col gap-10 justify-center items-center p-4 relative overflow-hidden">
           {userProfiles.length > 0 && !isLoadingUserProfiles && (
             <>
-              <SwipeArea
-                userProfiles={userProfiles}
-                handleSwipeLeft={handleSwipeLeft}
-                handleSwipeRight={handleSwipeRight}
-              />
+              <UserTable />
               <SwipeFeedback />
+              <AnimatePresence>
+                {selectedUser && (
+                  <ExpandedProfile
+                    user={selectedUser}
+                    onClose={() => setSelectedUser(null)}
+                  />
+                )}
+              </AnimatePresence>
             </>
           )}
 
@@ -65,65 +209,3 @@ const Match = () => {
 };
 
 export default Match;
-
-const SwipeArea = ({ userProfiles, handleSwipeLeft, handleSwipeRight }) => (
-  <div className="flex flex-col items-center space-y-4">
-    {userProfiles.map((user) => (
-      <div
-        key={user._id}
-        className="flex items-center justify-between w-full bg-white p-4 rounded-lg shadow-md"
-      >
-        <div>
-          <img
-            src={user.image || "/avatar.png"}
-            alt={user.name}
-            className="h-12 w-12 rounded-full mr-3 border-2 border-pink-300"
-          />
-          <h3 className="font-semibold text-gray-800">{user.name}</h3>
-        </div>
-        <div className="flex space-x-2">
-          <button
-            onClick={() => handleSwipeLeft(user)}
-            className="p-2 bg-gray-200 rounded-full hover:bg-red-200 transition-colors"
-          >
-            <X size={24} className="text-red-500" />
-          </button>
-          <button
-            onClick={() => handleSwipeRight(user)}
-            className="p-2 bg-gray-200 rounded-full hover:bg-green-200 transition-colors"
-          >
-            <ChevronRight size={24} className="text-green-500" />
-          </button>
-        </div>
-      </div>
-    ))}
-  </div>
-);
-
-const NoMoreProfiles = () => (
-  <div className="flex flex-col items-center justify-center h-full text-center p-8">
-    <Frown className="text-pink-400 mb-6" size={80} />
-    <h2 className="text-3xl font-bold text-gray-800 mb-4">
-      Woah there, speedy fingers!
-    </h2>
-    <p className="text-xl text-gray-600 mb-6">
-      Bro are you OK? Maybe it&apos;s time to touch some grass.
-    </p>
-  </div>
-);
-
-const LoadingUI = () => (
-  <div className="relative w-full max-w-sm h-[28rem]">
-    <div className="card bg-white w-96 h-[28rem] rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-      <div className="px-4 pt-4 h-3/4">
-        <div className="w-full h-full bg-gray-200 rounded-lg" />
-      </div>
-      <div className="card-body bg-gradient-to-b from-white to-pink-50 p-4">
-        <div className="space-y-2">
-          <div className="h-6 bg-gray-200 rounded w-3/4" />
-          <div className="h-4 bg-gray-200 rounded w-1/2" />
-        </div>
-      </div>
-    </div>
-  </div>
-);

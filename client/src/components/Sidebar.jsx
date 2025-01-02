@@ -88,7 +88,7 @@ const NoMatchesFound = () => (
     <h3 className="text-xl font-semibold text-gray-700 mb-2">No Matches Yet</h3>
     <p className="text-gray-500 max-w-xs">
       Don&apos;t worry! Your perfect match is just around the corner. Keep
-      swiping!
+      looking!
     </p>
   </div>
 );
