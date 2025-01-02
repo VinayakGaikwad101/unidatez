@@ -1,20 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Heart, Loader, X } from "lucide-react";
 import { Link } from "react-router-dom";
-// import { useMatchStore } from "../store/useMatchStore";
+import { useMatchStore } from "../store/useMatchStore";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const isChatPage = location.pathname === "/chats";
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
-  // const { getMyMatches, matches, isLoadingMyMatches } = useMatchStore();
+  const { getMyMatches, matches, isLoadingMyMatches } = useMatchStore();
 
-  // useEffect(() => {
-  //   getMyMatches();
-  // }, [getMyMatches]);
+  useEffect(() => {
+    getMyMatches();
+  }, [getMyMatches]);
 
   return (
     <>
@@ -38,8 +41,7 @@ const Sidebar = () => {
             </button>
           </div>
 
-          {/* Uncomment and modify this section when ready to display matches */}
-          {/* <div className="flex-grow overflow-y-auto p-4 z-10 relative">
+          <div className="flex-grow overflow-y-auto p-4 z-10 relative">
             {isLoadingMyMatches ? (
               <LoadingState />
             ) : matches.length === 0 ? (
@@ -53,23 +55,27 @@ const Sidebar = () => {
                       alt="User avatar"
                       className="size-12 object-cover rounded-full mr-3 border-2 border-pink-300"
                     />
-                    <h3 className="font-semibold text-gray-800">{match.name}</h3>
+                    <h3 className="font-semibold text-gray-800">
+                      {match.name}
+                    </h3>
                   </div>
                 </Link>
               ))
             )}
-          </div> */}
+          </div>
         </div>
       </div>
 
-      <button
-        className={`fixed top-16 left-4 p-2 bg-white text-[#ff5470] rounded-full z-20 shadow-md hover:bg-[#ff5470] hover:text-white transition-colors duration-300 ${
-          isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
-        }`}
-        onClick={toggleSidebar}
-      >
-        <Heart size={24} />
-      </button>
+      {isChatPage && (
+        <button
+          className={`fixed top-16 left-4 p-2 bg-white text-[#ff5470] rounded-full z-20 shadow-md hover:bg-[#ff5470] hover:text-white transition-colors duration-300 ${
+            isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+          }`}
+          onClick={toggleSidebar}
+        >
+          <Heart size={24} />
+        </button>
+      )}
     </>
   );
 };
