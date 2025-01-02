@@ -14,7 +14,7 @@ const Chats = () => {
         alt="Romantic background"
         className="absolute inset-0 w-full h-full object-cover hidden sm:block"
       />
-      
+      <Sidebar />
     </div>
   );
 };
