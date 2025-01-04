@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema(
       type: Number,
       min: 17,
       required: true,
+      default: 0,
     },
     gender: {
       type: String,
@@ -34,6 +35,7 @@ const userSchema = new mongoose.Schema(
     collegeStream: {
       type: String,
       enum: [
+        "",
         "Biotechnology",
         "Mechanical",
         "Electrical and computer science",
@@ -50,6 +52,7 @@ const userSchema = new mongoose.Schema(
     unidatezFor: {
       type: String,
       enum: [
+        "",
         "Friendship",
         "Networking",
         "Study Partner",
@@ -68,7 +71,7 @@ const userSchema = new mongoose.Schema(
     pronouns: { type: String },
     collegeYear: {
       type: String,
-      enum: ["1st", "2nd", "3rd", "4th"],
+      enum: ["", "1st", "2nd", "3rd", "4th"],
     },
     homeState: { type: String },
     bio: {

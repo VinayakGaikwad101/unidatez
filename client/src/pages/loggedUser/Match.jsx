@@ -12,8 +12,6 @@ const Match = () => {
     swipeLeft,
     swipeRight,
     swipeFeedback,
-    // subscribeToNewMatches,
-    // unsubscribeFromNewMatches,
   } = useMatchStore();
 
   const { authUser } = useAuthStore();
@@ -22,14 +20,6 @@ const Match = () => {
   useEffect(() => {
     getUserProfiles();
   }, [getUserProfiles]);
-
-  // useEffect(() => {
-  //   authUser && subscribeToNewMatches();
-
-  //   return () => {
-  //     unsubscribeFromNewMatches();
-  //   };
-  // }, [subscribeToNewMatches, unsubscribeFromNewMatches, authUser]);
 
   const handleSwipeLeft = (user) => {
     swipeLeft(user);

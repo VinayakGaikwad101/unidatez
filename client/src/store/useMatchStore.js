@@ -60,7 +60,7 @@ export const useMatchStore = create((set) => ({
     try {
       set({ swipeFeedback: "passed" });
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/api/matches/swipe-left/${user._id}`,
+        `${import.meta.env.VITE_SERVER_URL}/api/matches/dislike/${user._id}`,
         {
           method: "POST",
           headers: {
@@ -71,11 +71,20 @@ export const useMatchStore = create((set) => ({
       );
       const res = await response.json();
       if (!res.success) {
-        throw new Error("Failed to swipe left");
+        toast.error(res.message || "Failed to dislike");
+      }
+      if (res.success) {
+        toast.success(res.message || "Disliked successfully");
+        // Remove the disliked user from userProfiles
+        set((state) => ({
+          userProfiles: state.userProfiles.filter(
+            (profile) => profile._id !== user._id
+          ),
+        }));
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Failed to swipe left");
+      toast.error(error.message || "Failed to dislike");
     } finally {
       setTimeout(() => set({ swipeFeedback: null }), 1500);
     }
@@ -85,9 +94,7 @@ export const useMatchStore = create((set) => ({
     try {
       set({ swipeFeedback: "liked" });
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/api/matches/swipe-right/${
-          user._id
-        }`,
+        `${import.meta.env.VITE_SERVER_URL}/api/matches/like/${user._id}`,
         {
           method: "POST",
           headers: {
@@ -98,11 +105,20 @@ export const useMatchStore = create((set) => ({
       );
       const res = await response.json();
       if (!res.success) {
-        throw new Error("Failed to swipe right");
+        toast.error(res.message || "Failed to like");
+      }
+      if (res.success) {
+        toast.success(res.message || "Liked successfully");
+        // Remove the liked user from userProfiles
+        set((state) => ({
+          userProfiles: state.userProfiles.filter(
+            (profile) => profile._id !== user._id
+          ),
+        }));
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Failed to swipe right");
+      toast.error(error.message || "Failed to like");
     } finally {
       setTimeout(() => set({ swipeFeedback: null }), 1500);
     }

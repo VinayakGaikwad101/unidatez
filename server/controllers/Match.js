@@ -6,6 +6,12 @@ export const likeUser = async (req, res) => {
     const { likedUserID } = req.params;
     const currentUser = await User.findById(req.user.id);
 
+    if (currentUser.image === "") {
+      return res
+        .status(400)
+        .json({ message: "Upload your profile picture first", success: false });
+    }
+
     const likedUser = await User.findById(likedUserID);
 
     if (!likedUser) {
@@ -44,6 +50,12 @@ export const dislikeUser = async (req, res) => {
   try {
     const { dislikedUserID } = req.params;
     const currentUser = await User.findById(req.user.id);
+
+    if (currentUser.image === "") {
+      return res
+        .status(400)
+        .json({ message: "Upload your profile picture first", success: false });
+    }
 
     if (!currentUser.dislikes.includes(dislikedUserID)) {
       currentUser.dislikes.push(dislikedUserID);
