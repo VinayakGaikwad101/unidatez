@@ -4,6 +4,7 @@ import { Heart, X, Shield, UserCheck, RotateCcw } from "lucide-react";
 
 const Users = () => {
   const {
+    allUsers,
     likedUsers,
     dislikedUsers,
     blockedUsers,
@@ -30,44 +31,72 @@ const Users = () => {
     fetchMatchedUsers,
   ]);
 
-  const renderUserTable = (users, action) => (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="py-2 px-4 text-left">Image</th>
-            <th className="py-2 px-4 text-left">Name</th>
-            <th className="py-2 px-4 text-left">Age</th>
-            <th className="py-2 px-4 text-left">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user._id} className="border-b">
-              <td className="py-2 px-4">
-                <img
-                  src={user.image || "/avatar.png"}
-                  alt={user.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              </td>
-              <td className="py-2 px-4">{user.name}</td>
-              <td className="py-2 px-4">{user.age}</td>
-              <td className="py-2 px-4">
-                <button
-                  onClick={() => revertAction(user, action)}
-                  className="flex items-center text-blue-500 hover:text-blue-700"
-                >
-                  <RotateCcw size={16} className="mr-1" />
-                  Revert
-                </button>
-              </td>
+  const renderUserTable = (action) => {
+    let users;
+    switch (action) {
+      case "like":
+        users = allUsers.filter((user) =>
+          likedUsers.some((u) => u._id === user._id)
+        );
+        break;
+      case "dislike":
+        users = allUsers.filter((user) =>
+          dislikedUsers.some((u) => u._id === user._id)
+        );
+        break;
+      case "block":
+        users = allUsers.filter((user) =>
+          blockedUsers.some((u) => u._id === user._id)
+        );
+        break;
+      case "match":
+        users = allUsers.filter((user) =>
+          matchedUsers.some((u) => u._id === user._id)
+        );
+        break;
+      default:
+        users = [];
+    }
+
+    return (
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="py-2 px-4 text-left">Image</th>
+              <th className="py-2 px-4 text-left">Name</th>
+              <th className="py-2 px-4 text-left">Age</th>
+              <th className="py-2 px-4 text-left">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id} className="border-b">
+                <td className="py-2 px-4">
+                  <img
+                    src={user.image || "/avatar.png"}
+                    alt={user.name}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                </td>
+                <td className="py-2 px-4">{user.name}</td>
+                <td className="py-2 px-4">{user.age}</td>
+                <td className="py-2 px-4">
+                  <button
+                    onClick={() => revertAction(user, action)}
+                    className="flex items-center text-blue-500 hover:text-blue-700"
+                  >
+                    <RotateCcw size={16} className="mr-1" />
+                    Revert
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-start p-4 overflow-hidden">
@@ -127,11 +156,10 @@ const Users = () => {
           <div className="text-center">Loading...</div>
         ) : (
           <>
-            {activeTab === "liked" && renderUserTable(likedUsers, "like")}
-            {activeTab === "disliked" &&
-              renderUserTable(dislikedUsers, "dislike")}
-            {activeTab === "blocked" && renderUserTable(blockedUsers, "block")}
-            {activeTab === "matched" && renderUserTable(matchedUsers, "match")}
+            {activeTab === "liked" && renderUserTable("like")}
+            {activeTab === "disliked" && renderUserTable("dislike")}
+            {activeTab === "blocked" && renderUserTable("block")}
+            {activeTab === "matched" && renderUserTable("match")}
           </>
         )}
       </div>
