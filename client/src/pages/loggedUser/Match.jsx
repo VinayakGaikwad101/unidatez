@@ -157,9 +157,7 @@ const Match = () => {
       <h2 className="text-3xl font-bold text-gray-800 mb-4">
         Woah there, speedy fingers!
       </h2>
-      <p className="text-xl text-gray-600 mb-6">
-        Bro are you OK? Maybe it's time to touch some grass.
-      </p>
+      <p className="text-xl text-gray-600 mb-6">Go touch some grass!</p>
     </div>
   );
 
