@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
+import { disconnectSocket, initializeSocket } from "../socket/clientSocket";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -86,7 +87,6 @@ export const useAuthStore = create((set, get) => ({
           credentials: "include", // Important: include credentials
         }
       );
-
       const data = await response.json();
 
       if (!data.success) {
@@ -97,6 +97,8 @@ export const useAuthStore = create((set, get) => ({
 
       toast.success(data.message || "Login successful");
       set({ authUser: data.user, loading: false });
+      initializeSocket(data.user._id);
+
       navigate("/profile");
     } catch (error) {
       toast.error(error.message || "Login failed. Please try again.");
@@ -116,10 +118,11 @@ export const useAuthStore = create((set, get) => ({
           credentials: "include",
         }
       );
-
       if (response.ok) {
         toast.success("Logout successful");
         set({ authUser: null });
+        disconnectSocket();
+
         return true; // Indicate successful logout
       } else {
         throw new Error("Logout failed");
@@ -148,6 +151,7 @@ export const useAuthStore = create((set, get) => ({
 
       if (data.success) {
         set({ authUser: data.user });
+        initializeSocket(data.user._id);
       } else {
         set({ authUser: null });
       }
