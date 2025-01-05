@@ -153,7 +153,7 @@ const Match = () => {
 
   const NoMoreProfiles = () => (
     <div className="flex flex-col items-center justify-center h-full text-center p-8">
-      <Frown className="text-[#ff5470] mb-6" size={80} />
+      <Frown className="text-[#b0243b] mb-6" size={80} />
       <h2 className="text-3xl font-bold text-gray-800 mb-4">
         Woah there, speedy fingers!
       </h2>
@@ -168,7 +168,17 @@ const Match = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-[#ff5470] to-pink-100 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-start p-4 overflow-hidden">
+      <img
+        src="/mobile_login_bg.jpg"
+        alt="Romantic background"
+        className="absolute inset-0 w-full h-full object-cover sm:hidden"
+      />
+      <img
+        src="/native_login_bg.jpg"
+        alt="Romantic background"
+        className="absolute inset-0 w-full h-full object-cover hidden sm:block"
+      />
       <div className="flex-grow flex flex-col overflow-hidden">
         <main className="flex-grow flex flex-col gap-10 justify-center items-center p-4 relative overflow-hidden">
           {userProfiles.length > 0 && !isLoadingUserProfiles && (
