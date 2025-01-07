@@ -1,4 +1,5 @@
 import User from "../model/UserModel.js";
+import { getConnectedUsers, getIO } from "../socket/serverSocket.js";
 
 // swipe right function in frontend
 export const likeUser = async (req, res) => {
@@ -30,7 +31,35 @@ export const likeUser = async (req, res) => {
         likedUser.matches.push(currentUser.id);
 
         await Promise.all([await currentUser.save(), await likedUser.save()]);
-        // TODO send notification to frontend when it is a match (realtime socket integration)
+
+        // SOCKET INTEGRATION BELOW:
+        // io.emit for all users
+        // io.to for specific users
+        const connectedUsers = getConnectedUsers();
+        const io = getIO();
+        const likedUserSocketID = connectedUsers.get(likedUserID);
+        if (likedUserSocketID) {
+          // liked user is online then:
+          // newMatch = event name
+          io.to(likedUserSocketID).emit("newMatch", {
+            _id: currentUser.id,
+            name: currentUser.name,
+            image: currentUser.image,
+          });
+        }
+
+        const currentUserSocketID = connectedUsers.get(
+          currentUser._id.toString()
+        );
+        if (currentUserSocketID) {
+          // current user is online then:
+          // newMatch = event name
+          io.to(currentUserSocketID).emit("newMatch", {
+            _id: likedUser._id,
+            name: likedUser.name,
+            image: likedUser.image,
+          });
+        }
       }
     }
 

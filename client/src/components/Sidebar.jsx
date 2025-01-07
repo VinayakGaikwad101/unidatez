@@ -1,12 +1,9 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Heart, Loader, X } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useMatchStore } from "../store/useMatchStore";
 
-const Sidebar = () => {
+const Sidebar = ({ onSelectUser }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const isChatPage = location.pathname === "/chats";
@@ -19,12 +16,17 @@ const Sidebar = () => {
     getMyMatches();
   }, [getMyMatches]);
 
+  const handleUserSelect = (match) => {
+    onSelectUser(match);
+    setIsOpen(false);
+  };
+
   return (
     <>
       <div
         className={`
           fixed top-20 bottom-4 left-0 z-10 bg-white shadow-md overflow-hidden transition-all duration-300
-          ease-in-out ${isOpen ? "w-64 lg:w-1/2" : "w-0"}
+          ease-in-out ${isOpen ? "w-full sm:w-64 lg:w-1/2" : "w-0"}
         `}
       >
         <div className="flex flex-col h-full">
@@ -48,18 +50,18 @@ const Sidebar = () => {
               <NoMatchesFound />
             ) : (
               matches.map((match) => (
-                <Link key={match._id} to={`/chat/${match._id}`}>
-                  <div className="flex items-center mb-4 cursor-pointer hover:bg-pink-50 p-2 rounded-lg transition-colors duration-300">
-                    <img
-                      src={match.image || "/avatar.png"}
-                      alt="User avatar"
-                      className="size-12 object-cover rounded-full mr-3 border-2 border-pink-300"
-                    />
-                    <h3 className="font-semibold text-gray-800">
-                      {match.name}
-                    </h3>
-                  </div>
-                </Link>
+                <div
+                  key={match._id}
+                  onClick={() => handleUserSelect(match)}
+                  className="flex items-center mb-4 cursor-pointer hover:bg-pink-50 p-2 rounded-lg transition-colors duration-300"
+                >
+                  <img
+                    src={match.image || "/avatar.png"}
+                    alt="User avatar"
+                    className="size-12 object-cover rounded-full mr-3 border-2 border-pink-300"
+                  />
+                  <h3 className="font-semibold text-gray-800">{match.name}</h3>
+                </div>
               ))
             )}
           </div>
