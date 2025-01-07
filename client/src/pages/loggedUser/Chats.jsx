@@ -4,13 +4,22 @@ import ChatBox from "../../components/ChatBox";
 
 const Chats = () => {
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSelectUser = (user) => {
     setSelectedUser(user);
+    setIsSidebarOpen(false);
   };
 
   const handleCloseChat = () => {
     setSelectedUser(null);
+  };
+
+  const handleToggleSidebar = (isOpen) => {
+    setIsSidebarOpen(isOpen);
+    if (isOpen) {
+      setSelectedUser(null);
+    }
   };
 
   return (
@@ -27,7 +36,11 @@ const Chats = () => {
       />
 
       <div className="relative w-full h-full">
-        <Sidebar onSelectUser={handleSelectUser} />
+        <Sidebar
+          onSelectUser={handleSelectUser}
+          isOpen={isSidebarOpen}
+          onToggle={handleToggleSidebar}
+        />
         <div
           className={`transition-all duration-300 ease-in-out ${
             selectedUser ? "translate-x-0" : "translate-x-full"

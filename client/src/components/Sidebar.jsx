@@ -3,12 +3,9 @@ import { useLocation } from "react-router-dom";
 import { Heart, Loader, X } from "lucide-react";
 import { useMatchStore } from "../store/useMatchStore";
 
-const Sidebar = ({ onSelectUser }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Sidebar = ({ onSelectUser, isOpen, onToggle }) => {
   const location = useLocation();
   const isChatPage = location.pathname === "/chats";
-
-  const toggleSidebar = () => setIsOpen(!isOpen);
 
   const { getMyMatches, matches, isLoadingMyMatches } = useMatchStore();
 
@@ -18,7 +15,7 @@ const Sidebar = ({ onSelectUser }) => {
 
   const handleUserSelect = (match) => {
     onSelectUser(match);
-    setIsOpen(false);
+    onToggle(false);
   };
 
   return (
@@ -37,7 +34,7 @@ const Sidebar = ({ onSelectUser }) => {
             </h2>
             <button
               className="p-1 text-gray-500 hover:text-gray-700 focus:outline-none"
-              onClick={toggleSidebar}
+              onClick={() => onToggle(false)}
             >
               <X size={24} />
             </button>
@@ -73,7 +70,7 @@ const Sidebar = ({ onSelectUser }) => {
           className={`fixed top-16 left-4 p-2 bg-white text-[#ff5470] rounded-full z-20 shadow-md hover:bg-[#ff5470] hover:text-white transition-colors duration-300 ${
             isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
-          onClick={toggleSidebar}
+          onClick={() => onToggle(true)}
         >
           <Heart size={24} />
         </button>
