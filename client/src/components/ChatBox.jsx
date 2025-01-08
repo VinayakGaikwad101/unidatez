@@ -1,18 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X, Send } from "lucide-react";
+import { useMessageStore } from "../store/useMessageStore";
+import { useAuthStore } from "../store/useAuthStore";
 
 const ChatBox = ({ selectedUser, onClose }) => {
   const [message, setMessage] = useState("");
+  const {
+    messages,
+    sendMessage,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useMessageStore();
+  const { authUser } = useAuthStore();
+  const messagesEndRef = useRef(null);
 
-  const handleSendMessage = (e) => {
+  useEffect(() => {
+    getMessages(selectedUser._id);
+    subscribeToMessages();
+
+    return () => {
+      unsubscribeFromMessages();
+    };
+  }, [
+    selectedUser._id,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    // TODO: Implement send message functionality
-    console.log("Sending message:", message);
-    setMessage("");
+    if (message.trim()) {
+      await sendMessage(selectedUser._id, message);
+      setMessage("");
+    }
   };
 
   return (
-    <div className="fixed bottom-40 right-0 w-full bg-white shadow-md flex flex-col z-20 transition-all duration-300 ease-in-out">
+    <div className="fixed bottom-0 right-0 w-full h-[calc(100vh-10rem)] bg-white shadow-md flex flex-col z-20 transition-all duration-300 ease-in-out">
       <div className="flex items-center justify-between p-4 border-b border-pink-200 bg-white">
         <div className="flex items-center">
           <img
@@ -31,11 +61,35 @@ const ChatBox = ({ selectedUser, onClose }) => {
           <X size={24} />
         </button>
       </div>
-      <div className="flex-grow overflow-y-auto p-4 bg-white h-full">
-        {/* Chat messages will go here */}
-        <div className="text-center text-gray-500 my-4">
-          Start of your conversation with {selectedUser.name}
-        </div>
+      <div className="flex-grow overflow-y-auto p-4 bg-white">
+        {messages.length === 0 ? (
+          <div className="text-center text-gray-500 my-4">
+            Start of your conversation with {selectedUser.name}
+          </div>
+        ) : (
+          messages.map((msg, index) => (
+            <div
+              key={msg._id || index}
+              className={`mb-4 ${
+                msg.sender === authUser._id ? "text-right" : "text-left"
+              }`}
+            >
+              <div
+                className={`inline-block p-2 rounded-lg ${
+                  msg.sender === authUser._id
+                    ? "bg-[#ff5470] text-white"
+                    : "bg-gray-200 text-gray-800"
+                } ${msg.pending ? "opacity-50" : ""}`}
+              >
+                {msg.content}
+              </div>
+              {msg.pending && (
+                <span className="text-xs text-gray-500 ml-2">Sending...</span>
+              )}
+            </div>
+          ))
+        )}
+        <div ref={messagesEndRef} />
       </div>
       <form
         onSubmit={handleSendMessage}
