@@ -164,4 +164,66 @@ export const useAuthStore = create((set, get) => ({
   },
 
   setAuthUser: (user) => set({ authUser: user }),
+
+  forgotPassword: async (email) => {
+    try {
+      set({ loading: true });
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/forgot-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!data.success) {
+        toast.error(data.message || "Failed to send reset email");
+        return;
+      }
+
+      toast.success(data.message || "Password reset email sent successfully");
+      return true;
+    } catch (error) {
+      toast.error(error.message || "Failed to send reset email");
+      return false;
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  resetPassword: async (token, newPassword) => {
+    try {
+      set({ loading: true });
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/reset-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token, newPassword }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!data.success) {
+        toast.error(data.message || "Failed to reset password");
+        return false;
+      }
+
+      toast.success(data.message || "Password reset successful");
+      return true;
+    } catch (error) {
+      toast.error(error.message || "Failed to reset password");
+      return false;
+    } finally {
+      set({ loading: false });
+    }
+  },
 }));

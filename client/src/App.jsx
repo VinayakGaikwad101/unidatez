@@ -12,6 +12,8 @@ import AboutUsSection from "./components/About";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import EmailVerification from "./pages/auth/EmailVerification";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 import UserProfile from "./pages/loggedUser/UserProfile";
 import { useAuthStore } from "./store/useAuthStore";
 import Header from "./components/Navbar";
@@ -80,6 +82,14 @@ const App = () => {
           element={
             !authUser ? <EmailVerification /> : <Navigate to="/profile" />
           }
+        />
+        <Route
+          path="/forgot-password"
+          element={!authUser ? <ForgotPassword /> : <Navigate to="/profile" />}
+        />
+        <Route
+          path="/reset-password/:token"
+          element={!authUser ? <ResetPassword /> : <Navigate to="/profile" />}
         />
         <Route
           path="/profile"

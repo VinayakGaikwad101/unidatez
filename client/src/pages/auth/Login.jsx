@@ -133,6 +133,14 @@ const Login = () => {
             Verify
           </Link>
         </p>
+        <p className="mt-4 text-center text-sm text-pink-600">
+          <Link
+            to="/forgot-password"
+            className=" mt-4 text-center text-sm font-medium text-pink-700 hover:text-pink-800"
+          >
+            Forgot your password?
+          </Link>
+        </p>
       </div>
       <Toaster position="top-center" />
     </div>
