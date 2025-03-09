@@ -32,8 +32,8 @@ const Signup = () => {
   return (
     <>
       <SEO 
-        title="Join UniDatez | The Leading University Dating Platform"
-        description="Create your UniDatez account - The exclusive dating platform made for university students. Join thousands of verified students, make meaningful connections, and find your perfect match on campus."
+        title="UniDatez Sign Up | College Dating App for University Students"
+        description="Create your UniDatez account today. The safe and trusted dating app exclusively for university students. Meet verified college students, find campus matches, and start meaningful relationships. Join the #1 university dating community."
         type="website"
         canonical="https://www.unidatez.com/signup"
       />

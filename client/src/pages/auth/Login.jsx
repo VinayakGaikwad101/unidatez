@@ -24,8 +24,8 @@ const Login = () => {
   return (
     <>
       <SEO 
-        title="UniDatez Login | #1 University Student Dating Platform"
-        description="Login to UniDatez, the premier dating platform exclusively for university students. Connect with verified students, find your perfect match, and experience campus dating like never before."
+        title="UniDatez Student Login | Best University Dating App"
+        description="Login to UniDatez - The trusted dating app for university students. Find matches in your college, connect with verified university students, and discover your perfect campus relationship. Safe, exclusive, and made for students."
         type="website"
         canonical="https://www.unidatez.com/login"
       />
