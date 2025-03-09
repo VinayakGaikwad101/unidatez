@@ -1,4 +1,8 @@
-import { sendVerificationCode, sendWelcomeEmail, sendEmail } from "../middleware/Email.js";
+import {
+  sendVerificationCode,
+  sendWelcomeEmail,
+  sendEmail,
+} from "../middleware/Email.js";
 import { Password_Reset_Template } from "../libs/EmailTemplate.js";
 import User from "../model/UserModel.js";
 import bcryptjs from "bcryptjs";
@@ -79,15 +83,6 @@ export const register = async (req, res) => {
 
     await user.save();
 
-    // const token = signToken(user._id);
-
-    // res.cookie("jwt", token, {
-    //   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-    //   httpOnly: true,
-    //   sameSite: "strict",
-    //   secure: !(process.env.ENVIRONMENT === "production"),
-    // });
-
     sendVerificationCode(user.email, user.verificationCode);
 
     return res.status(200).json({
@@ -132,6 +127,55 @@ export const verifyEmail = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
+export const resendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Email is required",
+        success: false,
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({
+        message: "Email already verified",
+        success: false,
+      });
+    }
+
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    user.verificationCode = verificationCode;
+    await user.save();
+
+    sendVerificationCode(user.email, user.verificationCode);
+
+    return res.status(200).json({
+      message: "OTP resent successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Error resending OTP",
+      success: false,
+    });
   }
 };
 
@@ -218,11 +262,9 @@ export const forgotPassword = async (req, res) => {
     }
 
     // Generate reset token
-    const resetToken = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     // Save reset token and expiry to user
     user.resetPasswordToken = resetToken;
@@ -233,7 +275,10 @@ export const forgotPassword = async (req, res) => {
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
     // Send reset email
-    const emailTemplate = Password_Reset_Template.replace("{resetLink}", resetUrl);
+    const emailTemplate = Password_Reset_Template.replace(
+      "{resetLink}",
+      resetUrl
+    );
     await sendEmail(user.email, "Password Reset Request", emailTemplate);
 
     return res.status(200).json({

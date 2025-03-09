@@ -31,7 +31,7 @@ export const useAuthStore = create((set, get) => ({
 
       toast.success(data.message || "Registration successful");
       set({ loading: false });
-      navigate("/otp-verification");
+      navigate("/otp-verification", { state: { email: signupData.email } });
     } catch (error) {
       toast.error(error.message || "Registration failed. Please try again.");
       set({ loading: false });
@@ -68,6 +68,37 @@ export const useAuthStore = create((set, get) => ({
     } catch (error) {
       toast.error(error.message || "Verification Failed");
       set({ loading: false });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  resendOTP: async (email) => {
+    try {
+      set({ loading: true });
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/resend-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!data.success) {
+        toast.error(data.message || "Failed to resend OTP");
+        return false;
+      }
+
+      toast.success(data.message || "OTP resent successfully");
+      return true;
+    } catch (error) {
+      toast.error(error.message || "Failed to resend OTP");
+      return false;
     } finally {
       set({ loading: false });
     }
