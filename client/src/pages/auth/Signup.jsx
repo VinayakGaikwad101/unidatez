@@ -35,7 +35,7 @@ const Signup = () => {
         title="Join UniDatez | The Leading University Dating Platform"
         description="Create your UniDatez account - The exclusive dating platform made for university students. Join thousands of verified students, make meaningful connections, and find your perfect match on campus."
         type="website"
-        canonical="https://unidatez.com/signup"
+        canonical="https://www.unidatez.com/signup"
       />
       <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
         {/* Background image */}
