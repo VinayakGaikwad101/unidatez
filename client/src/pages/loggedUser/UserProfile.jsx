@@ -1,108 +1,224 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
-import { UserIcon, HeartIcon, SparklesIcon } from "@heroicons/react/24/solid";
-import { motion } from "framer-motion";
+import { UserIcon, HeartIcon, SparklesIcon, BookOpenIcon, HomeIcon, FilmIcon, AcademicCapIcon, UserGroupIcon } from "@heroicons/react/24/solid";
+import { Music } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const UserProfile = () => {
   const { authUser } = useAuthStore();
   const navigate = useNavigate();
 
   const {
-    name = "Your name",
-    age = "Your age",
-    gender = "Your Gender",
-    genderPreference = "Your Gender Preference",
-    bio = "Nothing to Show, Express Yourself to let others know your true self ;)",
+    name = "Mystery Explorer 🎭",
+    age = "Age is just a number 😉",
+    gender = "Yet to reveal 🤫",
+    genderPreference = "Open to connections 💫",
+    bio = "Ready to write my next chapter... Care to be part of my story? 📖✨",
     image = null,
+    collegeStream = null,
+    unidatezFor = "Here to make meaningful connections 💝",
+    topSpotifyArtist = null,
+    favouriteMovieSeries = null,
+    topSongsOnSpotify = null,
+    pronouns = "",
+    collegeYear = null,
+    homeState = null
   } = authUser || {};
+
+  const getEducationDisplay = () => {
+    if (collegeStream && collegeYear) {
+      return `${collegeStream} • ${collegeYear} Year`;
+    }
+    return "A student on a journey of discovery 🎓";
+  };
+
+  const getLocationDisplay = () => {
+    return homeState || "Somewhere on this beautiful planet 🌍";
+  };
+
+  const getMusicDisplay = () => {
+    if (topSpotifyArtist || topSongsOnSpotify) {
+      return `${topSpotifyArtist || "Loading playlist"} • ${topSongsOnSpotify || "Creating vibes"} 🎵`;
+    }
+    return "Ready to share musical vibes! 🎸";
+  };
+
+  const getEntertainmentDisplay = () => {
+    return favouriteMovieSeries || "Netflix & chill enthusiast 🍿";
+  };
 
   const handleUpdateProfile = () => {
     navigate("/update-profile");
   };
 
+  const InfoCard = ({ icon: Icon, title, content, delay, className = "" }) => (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ 
+        scale: 1.03,
+        y: -5
+      }}
+      className={`relative overflow-hidden rounded-2xl p-4 group backdrop-blur-md ${className}`}
+      style={{
+        background: 'rgba(255, 255, 255, 0.1)',
+        border: '1px solid rgba(255, 255, 255, 0.2)'
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute -inset-px bg-gradient-to-r from-pink-500/50 to-purple-500/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ zIndex: -1 }} />
+
+      <motion.div 
+        className="flex items-center mb-3"
+        whileHover={{ x: 5 }}
+      >
+        <div className="p-2 rounded-xl bg-gradient-to-br from-pink-400/30 to-purple-400/30 mr-3 group-hover:from-pink-400/50 group-hover:to-purple-400/50 transition-all duration-300">
+          <Icon className="w-5 h-5 text-white" />
+        </div>
+        <h3 className="text-lg font-semibold text-white group-hover:text-pink-200 transition-colors duration-300">{title}</h3>
+      </motion.div>
+      <p className="text-pink-100/90 text-sm leading-relaxed pl-2 border-l-2 border-pink-400/30 group-hover:border-pink-400/50 transition-all duration-300">{content}</p>
+    </motion.div>
+  );
+
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400">
-      {/* Background image */}
-      <img
-        src="/mobile_login_bg.jpg"
-        alt="Romantic background"
-        className="absolute inset-0 w-full h-full object-cover sm:hidden"
-      />
       <img
         src="/native_login_bg.jpg"
         alt="Romantic background"
-        className="absolute inset-0 w-full h-full object-cover hidden sm:block"
+        className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Content overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm"></div>
+      <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
 
-      {/* Profile content */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="z-10 w-full max-w-3xl px-4 py-8 sm:px-6 lg:px-8"
+        transition={{ duration: 0.7 }}
+        className="z-10 w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8 h-screen overflow-y-auto flex justify-center"
       >
-        <div className="text-center mb-8">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-40 h-40 mx-auto mb-6 rounded-full overflow-hidden border-4 border-white shadow-lg flex items-center justify-center bg-pink-100"
-          >
-            {image ? (
-              <img
-                src={image}
-                alt={name}
-                className="w-full h-full object-cover"
+        <AnimatePresence>
+          <div className="flex flex-col items-center space-y-6 w-full">
+            {/* Profile Header */}
+            <motion.div 
+              className="text-center relative w-full flex flex-col items-center"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative w-32 h-32 mb-4 flex items-center justify-center"
+              >
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 animate-pulse" style={{ filter: 'blur(15px)' }}></div>
+                <div className="relative rounded-full overflow-hidden border-4 border-white/50 shadow-xl">
+                  {image ? (
+                    <img
+                      src={image}
+                      alt={name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-pink-300 to-purple-400 flex items-center justify-center">
+                      <UserIcon className="w-16 h-16 text-white" />
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+
+              <div className="relative z-10 backdrop-blur-sm bg-white/10 px-8 py-4 rounded-2xl border border-white/20">
+                <motion.h2 
+                  className="text-3xl font-bold text-white mb-2"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  {name} {pronouns && <span className="text-lg">({pronouns})</span>}
+                </motion.h2>
+                <motion.p 
+                  className="text-lg text-pink-200"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  {age} • {gender} • {unidatezFor}
+                </motion.p>
+              </div>
+            </motion.div>
+
+            {/* Profile Content */}
+            <div className="w-full space-y-4">
+              <InfoCard
+                icon={SparklesIcon}
+                title="About Me"
+                content={bio}
+                delay={0.3}
+                className="transform -rotate-1"
               />
-            ) : (
-              <UserIcon className="w-24 h-24 text-pink-400" />
-            )}
-          </motion.div>
-          <h2 className="text-4xl font-bold text-white mb-2 text-shadow">
-            {name}
-          </h2>
-          <p className="text-xl text-pink-200">
-            {age} • {gender}
-          </p>
-        </div>
 
-        <div className="space-y-8 mb-12">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            className="bg-white bg-opacity-20 backdrop-blur-md rounded-lg p-6 shadow-lg"
-          >
-            <div className="flex items-center mb-4">
-              <HeartIcon className="w-6 h-6 text-pink-300 mr-2" />
-              <h3 className="text-xl font-semibold text-white">Preference</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <InfoCard
+                  icon={HeartIcon}
+                  title="Preference"
+                  content={genderPreference}
+                  delay={0.4}
+                  className="transform rotate-1"
+                />
+
+                <InfoCard
+                  icon={AcademicCapIcon}
+                  title="Education"
+                  content={getEducationDisplay()}
+                  delay={0.5}
+                  className="transform -rotate-1"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <InfoCard
+                  icon={HomeIcon}
+                  title="Location"
+                  content={getLocationDisplay()}
+                  delay={0.6}
+                  className="transform rotate-1"
+                />
+
+                <InfoCard
+                  icon={Music}
+                  title="Music"
+                  content={getMusicDisplay()}
+                  delay={0.7}
+                  className="transform -rotate-1"
+                />
+
+                <InfoCard
+                  icon={FilmIcon}
+                  title="Entertainment"
+                  content={getEntertainmentDisplay()}
+                  delay={0.8}
+                  className="transform rotate-1"
+                />
+              </div>
             </div>
-            <p className="text-pink-100 text-lg">{genderPreference}</p>
-          </motion.div>
 
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            className="bg-white bg-opacity-20 backdrop-blur-md rounded-lg p-6 shadow-lg"
-          >
-            <div className="flex items-center mb-4">
-              <SparklesIcon className="w-6 h-6 text-pink-300 mr-2" />
-              <h3 className="text-xl font-semibold text-white">About Me</h3>
-            </div>
-            <p className="text-pink-100 text-lg italic">
-              &quot;{bio ? bio : "Nothing to show"}&quot;
-            </p>
-          </motion.div>
-        </div>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleUpdateProfile}
-          className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold py-4 px-6 rounded-full transition duration-300 ease-in-out transform hover:from-pink-600 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 shadow-lg"
-        >
-          Update Profile
-        </motion.button>
+            {/* Update Profile Button */}
+            <motion.div
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 10px 20px rgba(0,0,0,0.2)"
+              }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleUpdateProfile}
+              className="w-full max-w-md overflow-hidden rounded-full relative cursor-pointer"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-red-500 rounded-full opacity-75" style={{ filter: 'blur(8px)' }}></div>
+              <div className="relative bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold py-3 px-6 rounded-full text-center transform transition-all duration-300 hover:from-pink-600 hover:to-red-600">
+                ✨ Complete Your Profile
+              </div>
+            </motion.div>
+          </div>
+        </AnimatePresence>
       </motion.div>
     </div>
   );
