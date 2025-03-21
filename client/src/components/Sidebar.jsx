@@ -1,88 +1,107 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Heart, Loader, X } from "lucide-react";
+import { useEffect } from "react";
+import { Heart, Loader } from "lucide-react";
 import { useMatchStore } from "../store/useMatchStore";
+import { useMessageStore } from "../store/useMessageStore";
+import { useAuthStore } from "../store/useAuthStore";
 
-const Sidebar = ({ onSelectUser, isOpen, onToggle }) => {
-  const location = useLocation();
-  const isChatPage = location.pathname === "/chats";
-
+const Sidebar = ({ onSelectUser }) => {
   const { getMyMatches, matches, isLoadingMyMatches } = useMatchStore();
+  const { getLastMessages, lastMessages, subscribeToMessages, unsubscribeFromMessages } = useMessageStore();
+  const { authUser } = useAuthStore();
 
   useEffect(() => {
     getMyMatches();
-  }, [getMyMatches]);
+    getLastMessages();
+    subscribeToMessages();
 
-  const handleUserSelect = (match) => {
-    onSelectUser(match);
-    onToggle(false);
+    return () => {
+      unsubscribeFromMessages();
+    };
+  }, [getMyMatches, getLastMessages, subscribeToMessages, unsubscribeFromMessages]);
+
+  const formatMessagePreview = (message) => {
+    if (!message) return "";
+    const isOwnMessage = message.sender === authUser._id;
+    const preview = message.content.length > 30 
+      ? message.content.substring(0, 30) + "..."
+      : message.content;
+    return isOwnMessage ? `You: ${preview}` : preview;
+  };
+
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now - date;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const isToday = date.toDateString() === now.toDateString();
+    
+    if (isToday) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (days === 1) {
+      return "Yesterday";
+    } else if (days < 7) {
+      return date.toLocaleDateString([], { weekday: 'short' });
+    } else {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
   };
 
   return (
-    <>
-      <div
-        className={`
-          fixed top-20 bottom-4 left-0 z-10 bg-white shadow-md overflow-hidden transition-all duration-300
-          ease-in-out ${isOpen ? "w-full sm:w-64 lg:w-1/2" : "w-0"}
-        `}
-      >
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="p-4 pb-[27px] border-b border-pink-200 flex justify-between items-center">
-            <h2 className="text-xl font-bold text-[#ff5470] lg:text-2xl">
-              Matches
-            </h2>
-            <button
-              className="p-1 text-gray-500 hover:text-gray-700 focus:outline-none"
-              onClick={() => onToggle(false)}
-            >
-              <X size={24} />
-            </button>
-          </div>
-
-          <div className="flex-grow overflow-y-auto p-4 z-10 relative">
-            {isLoadingMyMatches ? (
-              <LoadingState />
-            ) : matches.length === 0 ? (
-              <NoMatchesFound />
-            ) : (
-              matches.map((match) => (
-                <div
-                  key={match._id}
-                  onClick={() => handleUserSelect(match)}
-                  className="flex items-center mb-4 cursor-pointer hover:bg-pink-50 p-2 rounded-lg transition-colors duration-300"
-                >
-                  <img
-                    src={match.image || "/avatar.png"}
-                    alt="User avatar"
-                    className="size-12 object-cover rounded-full mr-3 border-2 border-pink-300"
-                  />
-                  <h3 className="font-semibold text-gray-800">{match.name}</h3>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+    <div className="flex flex-col h-full">
+      <div className="p-4 border-b border-pink-200">
+        <h2 className="text-xl font-bold text-[#ff5470]">
+          Chats
+        </h2>
       </div>
 
-      {isChatPage && (
-        <button
-          className={`fixed top-16 left-4 p-2 bg-white text-[#ff5470] rounded-full z-20 shadow-md hover:bg-[#ff5470] hover:text-white transition-colors duration-300 ${
-            isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
-          }`}
-          onClick={() => onToggle(true)}
-        >
-          <Heart size={24} />
-        </button>
-      )}
-    </>
+      <div className="flex-grow overflow-y-auto">
+        {isLoadingMyMatches ? (
+          <LoadingState />
+        ) : matches.length === 0 ? (
+          <NoMatchesFound />
+        ) : (
+          matches.map((match) => {
+            const lastMessage = lastMessages[match._id];
+            return (
+              <div
+                key={match._id}
+                onClick={() => onSelectUser(match)}
+                className="flex items-center px-4 py-3 cursor-pointer hover:bg-pink-50 transition-colors duration-300 border-b border-gray-100"
+              >
+                <img
+                  src={match.image || "/avatar.png"}
+                  alt="User avatar"
+                  className="w-12 h-12 object-cover rounded-full mr-3 border-2 border-pink-300 flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-baseline mb-1">
+                    <h3 className="font-semibold text-gray-800 truncate">
+                      {match.name}
+                    </h3>
+                    {lastMessage && (
+                      <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                        {formatTimestamp(lastMessage.createdAt)}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-500 truncate">
+                    {lastMessage ? formatMessagePreview(lastMessage) : "Start a conversation"}
+                  </p>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
   );
 };
 
 export default Sidebar;
 
 const NoMatchesFound = () => (
-  <div className="flex flex-col items-center justify-center h-full text-center">
+  <div className="flex flex-col items-center justify-center h-full text-center p-4">
     <Heart className="text-[#ff5470] mb-4" size={48} />
     <h3 className="text-xl font-semibold text-gray-700 mb-2">No Matches Yet</h3>
     <p className="text-gray-500 max-w-xs">
@@ -93,7 +112,7 @@ const NoMatchesFound = () => (
 );
 
 const LoadingState = () => (
-  <div className="flex flex-col items-center justify-center h-full text-center">
+  <div className="flex flex-col items-center justify-center h-full text-center p-4">
     <Loader className="text-[#ff5470] mb-4 animate-spin" size={48} />
     <h3 className="text-xl font-semibold text-gray-700 mb-2">
       Loading Matches

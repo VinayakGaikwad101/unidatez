@@ -61,7 +61,7 @@ const Header = () => {
 
   return (
     <motion.header
-      className="bg-[#ff5470] shadow-lg"
+      className="bg-[#ff5470] shadow-lg fixed top-0 left-0 right-0 z-50"
       initial="hidden"
       animate="visible"
       variants={headerVariants}
@@ -190,7 +190,7 @@ const Header = () => {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            className="md:hidden bg-[#ff5470] border-t border-pink-400"
+            className="md:hidden bg-[#ff5470] border-t border-pink-400 absolute w-full"
             initial="hidden"
             animate="visible"
             exit="hidden"
@@ -205,6 +205,7 @@ const Header = () => {
                       variants={linkVariants}
                       whileHover="hover"
                       whileTap="tap"
+                      className="w-full"
                     >
                       <Link
                         to={item.path}
@@ -240,6 +241,7 @@ const Header = () => {
                     variants={linkVariants}
                     whileHover="hover"
                     whileTap="tap"
+                    className="w-full"
                   >
                     <Link
                       to="/login"
@@ -254,6 +256,7 @@ const Header = () => {
                     variants={linkVariants}
                     whileHover="hover"
                     whileTap="tap"
+                    className="w-full"
                   >
                     <Link
                       to="/signup"
