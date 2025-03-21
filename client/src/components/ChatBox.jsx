@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Send, MoreVertical, Trash2, Trash } from "lucide-react";
+import { Send, MoreVertical, Trash2, Trash, Loader2, ArrowLeft } from "lucide-react";
 import { useMessageStore } from "../store/useMessageStore";
 import { useAuthStore } from "../store/useAuthStore";
 
-const ChatBox = ({ selectedUser }) => {
+const ChatBox = ({ selectedUser, onBack, showBackButton }) => {
   const [message, setMessage] = useState("");
   const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [isSending, setIsSending] = useState(false);
   const {
     messages,
     sendMessage,
@@ -52,9 +53,14 @@ const ChatBox = ({ selectedUser }) => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (message.trim() && selectedUser?._id) {
-      await sendMessage(selectedUser._id, message);
-      setMessage("");
+    if (message.trim() && selectedUser?._id && !isSending) {
+      setIsSending(true);
+      try {
+        await sendMessage(selectedUser._id, message);
+        setMessage("");
+      } finally {
+        setIsSending(false);
+      }
     }
   };
 
@@ -89,15 +95,26 @@ const ChatBox = ({ selectedUser }) => {
 
   return (
     <div className="h-full flex flex-col" ref={chatContainerRef}>
-      <div className="flex items-center gap-2 p-3 md:p-4 border-b border-pink-200 bg-white sticky top-0 z-10">
-        <img
-          src={selectedUser.image || "/avatar.png"}
-          alt={selectedUser.name}
-          className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-pink-300"
-        />
-        <h2 className="text-base md:text-lg font-semibold text-[#ff5470] truncate">
-          {selectedUser.name}
-        </h2>
+      <div className="flex items-center gap-2 p-3 md:p-4 border-b border-pink-200 bg-white sticky top-0 z-10 safe-top">
+        <div className="flex items-center gap-3 flex-1">
+          <button
+            onClick={onBack}
+            className="p-1 hover:bg-gray-100 rounded-full transition-colors md:hidden"
+            aria-label="Back to conversations"
+          >
+            <ArrowLeft size={24} className="text-gray-600" />
+          </button>
+          <div className="flex items-center gap-2">
+            <img
+              src={selectedUser.image || "/avatar.png"}
+              alt={selectedUser.name}
+              className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-pink-300"
+            />
+            <h2 className="text-base md:text-lg font-semibold text-[#ff5470] truncate">
+              {selectedUser.name}
+            </h2>
+          </div>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 md:p-4 bg-gray-50">
@@ -205,13 +222,19 @@ const ChatBox = ({ selectedUser }) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 p-2.5 md:p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm md:text-base bg-gray-50"
+            disabled={isSending}
+            className="flex-1 p-2.5 md:p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm md:text-base bg-gray-50 disabled:opacity-50"
           />
           <button
             type="submit"
-            className="bg-[#ff5470] text-white p-2.5 md:p-3 rounded-full hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 flex-shrink-0 shadow-sm"
+            disabled={isSending || !message.trim()}
+            className="bg-[#ff5470] text-white p-2.5 md:p-3 rounded-full hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 flex-shrink-0 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Send size={20} />
+            {isSending ? (
+              <Loader2 size={20} className="animate-spin" />
+            ) : (
+              <Send size={20} />
+            )}
           </button>
         </div>
       </form>

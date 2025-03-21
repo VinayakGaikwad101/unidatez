@@ -9,18 +9,22 @@ const Chats = () => {
     setSelectedUser(user);
   };
 
+  const handleBack = () => {
+    setSelectedUser(null);
+  };
+
   return (
-    <div className="fixed inset-0 pt-[72px]">
+    <div className="fixed inset-0 pt-[72px] md:pt-16">
       {/* Background Images */}
       <img
         src="/mobile_login_bg.jpg"
         alt="Romantic background"
-        className="absolute inset-0 w-full h-full object-cover sm:hidden -z-10"
+        className="fixed inset-0 w-full h-full object-cover sm:hidden -z-10"
       />
       <img
         src="/native_login_bg.jpg"
         alt="Romantic background"
-        className="absolute inset-0 w-full h-full object-cover hidden sm:block -z-10"
+        className="fixed inset-0 w-full h-full object-cover hidden sm:block -z-10"
       />
 
       {/* Chat Interface */}
@@ -42,7 +46,11 @@ const Chats = () => {
           bg-white/95 backdrop-blur-sm
           h-full
         `}>
-          <ChatBox selectedUser={selectedUser} />
+          <ChatBox 
+            selectedUser={selectedUser} 
+            onBack={handleBack}
+            showBackButton={window.innerWidth < 768}
+          />
         </div>
       </div>
     </div>
