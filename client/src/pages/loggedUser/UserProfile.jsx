@@ -173,8 +173,27 @@ const UserProfile = () => {
 
   const handleStartEdit = (field, value) => {
     setEditingField(field);
+    // Only remove emoji if it matches one of the default placeholder values
+    const defaultValues = {
+      name: "Mystery Explorer 🎭",
+      age: "Age is just a number 😉",
+      gender: "Yet to reveal 🤫",
+      genderPreference: "Open to connections 💫",
+      bio: "Ready to write my next chapter... Care to be part of my story? 📖✨",
+      collegeStream: "Student on a journey 📚",
+      unidatezFor: "Here to make meaningful connections 💝",
+      topSpotifyArtist: "Music lover 🎵",
+      favouriteMovieSeries: "Netflix & chill enthusiast 🍿",
+      topSongsOnSpotify: "Creating my playlist 🎧",
+      collegeYear: "Learning & Growing 🌱",
+      homeState: "Somewhere amazing 🌍",
+    };
+
+    // If the value exactly matches the default, remove the emoji, otherwise keep the value as is
     setEditValue(
-      value.replace(/\s*[🎭😉🤫💫📖✨💝🎓🌍🎸🍿🎵🎧🌱📚]\s*$/, "").trim()
+      value === defaultValues[field] 
+        ? value.replace(/\s*[🎭😉🤫💫📖✨💝🎓🌍🎸🍿🎵🎧🌱📚]\s*$/, "").trim()
+        : value
     );
   };
 
