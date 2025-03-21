@@ -85,7 +85,7 @@ const userSchema = new mongoose.Schema(
     images: {
       type: [String],
       default: [],
-      validate: [arrayLimit, 'Maximum 3 images allowed']
+      validate: [arrayLimit, 'Maximum 5 images allowed']
     },
     likes: [
       {

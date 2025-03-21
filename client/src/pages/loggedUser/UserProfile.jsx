@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuthStore } from "../../store/useAuthStore";
+import { toast } from "react-hot-toast";
 import {
   UserIcon,
   HeartIcon,
@@ -66,6 +67,12 @@ const UserProfile = () => {
 
   const handleImageUpload = async () => {
     if (selectedImages.length > 0) {
+      const totalImages = (authUser.images?.length || 0) + selectedImages.length;
+      if (totalImages > 5) {
+        toast.error(`You can only have a maximum of 5 images`);
+        return;
+      }
+
       let success = true;
       for (const image of selectedImages) {
         const uploadSuccess = await updateUser({ 
@@ -86,9 +93,14 @@ const UserProfile = () => {
 
   const handleFileSelect = async (e) => {
     const files = Array.from(e.target.files);
-    const validFiles = files.slice(0, 3 - (authUser.images?.length || 0));
+    const remainingSlots = 5 - (authUser.images?.length || 0);
     
-    if (validFiles.length > 0) {
+    if (files.length > remainingSlots) {
+      toast.error(`You can only add ${remainingSlots} more image${remainingSlots > 1 ? 's' : ''}`);
+      return;
+    }
+    
+    if (files.length > 0) {
       const compressAndConvert = async (file) => {
         return new Promise((resolve) => {
           const reader = new FileReader();
@@ -126,13 +138,17 @@ const UserProfile = () => {
       };
 
       const compressedImages = await Promise.all(
-        validFiles.map(file => compressAndConvert(file))
+        files.map(file => compressAndConvert(file))
       );
       setSelectedImages(compressedImages);
     }
   };
 
   const handleImageDelete = async (imageUrl) => {
+    if (authUser.images?.length <= 2) {
+      toast.error("Minimum 2 images required");
+      return;
+    }
     const success = await updateUser({ imageToDelete: imageUrl });
     if (success) {
       setCurrentImageIndex(0);
@@ -173,28 +189,7 @@ const UserProfile = () => {
 
   const handleStartEdit = (field, value) => {
     setEditingField(field);
-    // Only remove emoji if it matches one of the default placeholder values
-    const defaultValues = {
-      name: "Mystery Explorer 🎭",
-      age: "Age is just a number 😉",
-      gender: "Yet to reveal 🤫",
-      genderPreference: "Open to connections 💫",
-      bio: "Ready to write my next chapter... Care to be part of my story? 📖✨",
-      collegeStream: "Student on a journey 📚",
-      unidatezFor: "Here to make meaningful connections 💝",
-      topSpotifyArtist: "Music lover 🎵",
-      favouriteMovieSeries: "Netflix & chill enthusiast 🍿",
-      topSongsOnSpotify: "Creating my playlist 🎧",
-      collegeYear: "Learning & Growing 🌱",
-      homeState: "Somewhere amazing 🌍",
-    };
-
-    // If the value exactly matches the default, remove the emoji, otherwise keep the value as is
-    setEditValue(
-      value === defaultValues[field] 
-        ? value.replace(/\s*[🎭😉🤫💫📖✨💝🎓🌍🎸🍿🎵🎧🌱📚]\s*$/, "").trim()
-        : value
-    );
+    setEditValue(value);
   };
 
   const handleSave = async () => {
@@ -589,7 +584,7 @@ const UserProfile = () => {
             
             {/* Current Images */}
             {authUser.images && authUser.images.length > 0 && (
-              <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                 {authUser.images.map((img, index) => (
                   <div key={index} className="relative group aspect-square">
                     <img src={img} alt="Profile" className="w-full h-full object-cover rounded-lg" />
@@ -605,7 +600,7 @@ const UserProfile = () => {
             )}
 
             {/* Add New Images */}
-            {authUser.images?.length < 3 && (
+            {(authUser.images?.length || 0) < 5 && (
               <div className="mb-4">
                 <input
                   type="file"
@@ -613,6 +608,7 @@ const UserProfile = () => {
                   multiple
                   ref={fileInputRef}
                   onChange={handleFileSelect}
+                  max={5 - (authUser.images?.length || 0)}
                   className="hidden"
                 />
                 <button
@@ -626,7 +622,7 @@ const UserProfile = () => {
 
             {/* Selected Images Preview */}
             {selectedImages.length > 0 && (
-              <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                 {selectedImages.map((img, index) => (
                   <div key={index} className="relative aspect-square">
                     <img src={img} alt="Selected" className="w-full h-full object-cover rounded-lg" />

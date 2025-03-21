@@ -20,10 +20,10 @@ export const updateProfile = async (req, res) => {
     if (images && images.length > 0) {
       try {
         // Ensure we don't exceed 3 images
-        const remainingSlots = 3 - currentImages.length;
+        const remainingSlots = 5 - currentImages.length;
         if (remainingSlots <= 0) {
           return res.status(400).json({
-            message: "Maximum 3 images allowed",
+            message: "Maximum 5 images allowed",
             success: false
           });
         }
