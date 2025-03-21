@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 
+function arrayLimit(val) {
+  return val.length <= 3;
+}
+
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -78,9 +82,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    image: {
-      type: String,
-      default: "",
+    images: {
+      type: [String],
+      default: [],
+      validate: [arrayLimit, 'Maximum 3 images allowed']
     },
     likes: [
       {

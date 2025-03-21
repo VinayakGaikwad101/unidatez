@@ -3,29 +3,69 @@ import User from "../model/UserModel.js";
 
 export const updateProfile = async (req, res) => {
   try {
-    const { image, ...otherData } = req.body;
+    const { images, imageToDelete, ...otherData } = req.body;
     let updatedData = otherData;
+    
+    // Get current user to access existing images
+    const currentUser = await User.findById(req.user.id);
+    let currentImages = currentUser.images || [];
 
-    if (image) {
-      // base64 format
-      if (image.startsWith("data:image")) {
-        try {
-          const uploadResponse = await cloudinary.uploader.upload(image);
-          //   secure_url is image url, store in db/access on client
-          updatedData.image = uploadResponse.secure_url;
-        } catch (error) {
-          console.error(error);
-          return res.status(400).json({
-            message: "Failed to upload image.",
-            success: false,
-          });
-        }
-      }
+    // Handle image deletion if requested
+    if (imageToDelete) {
+      currentImages = currentImages.filter(img => img !== imageToDelete);
+      // Could add cloudinary.uploader.destroy here if needed
     }
 
-    const updatedUser = await User.findByIdAndUpdate(req.user.id, updatedData, {
-      new: true,
-    });
+    // Handle new image upload
+    if (images && images.length > 0) {
+      try {
+        // Ensure we don't exceed 3 images
+        const remainingSlots = 3 - currentImages.length;
+        if (remainingSlots <= 0) {
+          return res.status(400).json({
+            message: "Maximum 3 images allowed",
+            success: false
+          });
+        }
+
+        // Upload new images
+        const uploadPromises = images
+          .slice(0, remainingSlots)
+          .map(async (image) => {
+            if (image.startsWith("data:image")) {
+              const uploadResponse = await cloudinary.uploader.upload(image);
+              return uploadResponse.secure_url;
+            }
+            return null;
+          });
+
+        const uploadedUrls = (await Promise.all(uploadPromises)).filter(url => url);
+        updatedData.images = [...currentImages, ...uploadedUrls];
+
+      } catch (error) {
+        console.error(error);
+        return res.status(400).json({
+          message: "Failed to upload images.",
+          success: false,
+        });
+      }
+    } else {
+      updatedData.images = currentImages;
+    }
+
+    // Ensure at least one image
+    if (updatedData.images.length === 0) {
+      return res.status(400).json({
+        message: "At least one image is required",
+        success: false
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      updatedData,
+      { new: true }
+    );
 
     res.status(200).json({
       message: "Profile updated successfully",

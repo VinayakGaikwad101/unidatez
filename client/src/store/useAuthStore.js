@@ -7,6 +7,36 @@ export const useAuthStore = create((set, get) => ({
   checkingAuth: true,
   loading: false,
 
+  updateUser: async (updateData) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/api/users/update`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!data.success) {
+        toast.error(data.message || "Failed to update profile");
+        return false;
+      }
+
+      set({ authUser: data.user });
+      toast.success("Profile updated successfully");
+      return true;
+    } catch (error) {
+      toast.error(error.message || "Failed to update profile");
+      return false;
+    }
+  },
+
   signup: async (signupData, navigate) => {
     try {
       set({ loading: true });
@@ -115,7 +145,7 @@ export const useAuthStore = create((set, get) => ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify(loginData),
-          credentials: "include", // Important: include credentials
+          credentials: "include",
         }
       );
       const data = await response.json();
@@ -154,13 +184,13 @@ export const useAuthStore = create((set, get) => ({
         set({ authUser: null });
         disconnectSocket();
 
-        return true; // Indicate successful logout
+        return true;
       } else {
         throw new Error("Logout failed");
       }
     } catch (error) {
       toast.error(error.message || "Something went wrong during logout");
-      return false; // Indicate failed logout
+      return false;
     }
   },
 
@@ -174,7 +204,7 @@ export const useAuthStore = create((set, get) => ({
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // Ensure cookies are sent with the request
+          credentials: "include",
         }
       );
 
